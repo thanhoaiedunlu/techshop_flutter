@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../models/Customer.dart';
+
 class CustomerService {
   // Đặt baseUrl của API
   final String baseUrl = 'http://192.168.1.180:8080';// Thay đổi URL này thành đúng địa chỉ API của bạn
@@ -43,4 +45,39 @@ class CustomerService {
       return false;
     }
   }
+
+  Future<Customer?> checkLogin({
+    required String username,
+    required String password,
+  }) async {
+    final uri = '$baseUrl/api/login'; // Đường dẫn API để kiểm tra đăng nhập
+    final url = Uri.parse(uri);
+    final headers = {
+      'Content-Type': 'application/json', // Định dạng body là JSON
+    };
+    final body = json.encode({
+      'username': username, // Tên đăng nhập
+      'password': password, // Mật khẩu
+    });
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+      if (response.statusCode == 200) {
+        // Parse dữ liệu từ JSON và trả về đối tượng User
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        return Customer.fromJson(responseBody);
+      } else {
+        // Nếu đăng nhập thất bại, trả về null
+        return null;
+      }
+    } catch (e) {
+      // Xử lý lỗi khi có sự cố kết nối
+      return null;
+    }
+  }
+
 }
+
