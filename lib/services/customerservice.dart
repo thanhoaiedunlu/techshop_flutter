@@ -50,7 +50,7 @@ class CustomerService {
     required String username,
     required String password,
   }) async {
-    final uri = '$baseUrl/api/login'; // Đường dẫn API để kiểm tra đăng nhập
+    final uri = '$baseUrl/api/customer/login'; // Đường dẫn API để kiểm tra đăng nhập
     final url = Uri.parse(uri);
     final headers = {
       'Content-Type': 'application/json', // Định dạng body là JSON
