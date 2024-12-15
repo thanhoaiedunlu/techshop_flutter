@@ -16,17 +16,17 @@ class CustomerService {
     required String password,
     required String phone,
   }) async {
-    final uri = '$baseUrl/api/customer'; // Đường dẫn API
+    final uri = '$baseUrl/api/customer';
     final url = Uri.parse(uri);
     final headers = {
-      'Content-Type': 'application/json', // Định dạng body là JSON
+      'Content-Type': 'application/json',
     };
     final body = json.encode({
-      'fullname': fullname, // Tên đầy đủ
-      'username': username, // Tên đăng nhập
-      'email': email, // Địa chỉ email
-      'password': password, // Mật khẩu
-      'phone': phone, // Số điện thoại
+      'fullname': fullname,
+      'username': username,
+      'email': email,
+      'password': password,
+      'phone': phone,
     });
     try {
       final response = await http.post(
@@ -34,15 +34,13 @@ class CustomerService {
         headers: headers,
         body: body,
       );
-      if (response.statusCode == 2) {
-        // Thành công, trả về true
+      if (response.statusCode == 200) {
         return true;
       } else {
-        // Thất bại, trả về false
+        print('Error: ${response.statusCode}, ${response.body}');
         return false;
       }
     } catch (e) {
-      // Xử lý lỗi khi có sự cố kết nối (timeout, không thể kết nối đến API)
       return false;
     }
   }
@@ -51,14 +49,14 @@ class CustomerService {
     required String username,
     required String password,
   }) async {
-    final uri = '$baseUrl/api/customer/login'; // Đường dẫn API để kiểm tra đăng nhập
+    final uri = '$baseUrl/api/customer/login';
     final url = Uri.parse(uri);
     final headers = {
-      'Content-Type': 'application/json', // Định dạng body là JSON
+      'Content-Type': 'application/json',
     };
     final body = json.encode({
-      'username': username, // Tên đăng nhập
-      'password': password, // Mật khẩu
+      'username': username,
+      'password': password,
     });
     try {
       final response = await http.post(
@@ -73,7 +71,6 @@ class CustomerService {
         return null;
       }
     } catch (e) {
-      // Xử lý lỗi khi có sự cố kết nối
       return null;
     }
   }
