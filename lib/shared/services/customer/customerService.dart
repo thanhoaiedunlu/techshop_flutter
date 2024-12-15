@@ -34,15 +34,13 @@ class CustomerService {
         headers: headers,
         body: body,
       );
-      if (response.statusCode == 2) {
-        // Thành công, trả về true
+      if (response.statusCode == 200) {
         return true;
       } else {
-        // Thất bại, trả về false
+        print('Error: ${response.statusCode}, ${response.body}');
         return false;
       }
     } catch (e) {
-      // Xử lý lỗi khi có sự cố kết nối (timeout, không thể kết nối đến API)
       return false;
     }
   }
@@ -75,7 +73,6 @@ class CustomerService {
         return null;
       }
     } catch (e) {
-      // Xử lý lỗi khi có sự cố kết nối
       return null;
     }
   }
