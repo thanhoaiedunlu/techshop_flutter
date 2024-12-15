@@ -9,6 +9,8 @@ import 'package:techshop_flutter/screens/login/signUp.dart';
 import 'package:techshop_flutter/screens/seachProduct/ProductSearch.dart';
 
 import 'package:techshop_flutter/screens/chart/chart.dart';
+import 'package:techshop_flutter/screens/login/login.dart';
+import 'package:techshop_flutter/screens/login/signUp.dart';
 void main() {
   runApp(const MyApp());
 }
