@@ -8,6 +8,7 @@ import 'package:techshop_flutter/screens/login/login.dart';
 import 'package:techshop_flutter/screens/login/signUp.dart';
 import 'package:techshop_flutter/screens/seachProduct/ProductSearch.dart';
 
+import 'package:techshop_flutter/screens/chart/chart.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -41,8 +42,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const Login(),
-      // Sử dụng onGenerateRoute để điều hướng
-      onGenerateRoute: Routes.generateRoute,
     );
   }
 }

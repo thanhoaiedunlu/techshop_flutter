@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:techshop_flutter/screens/home/home.dart';
 import 'package:techshop_flutter/shared/services/customer/customerService.dart';
 import '../../models/CustomerModel.dart';
+import '../../shared/services/customer/customerService.dart';
 import '../../shared/ultis/shared_preferences.dart';
-
+import '../home/home.dart';
 class Login extends StatefulWidget {
   const Login({super.key});
 
