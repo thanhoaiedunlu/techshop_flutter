@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techshop_flutter/screens/login/signUp.dart';
 import '../../models/Customer.dart';
 import '../../shared/services/customer/customerService.dart';
 import '../../shared/ultis/shared_preferences.dart';
@@ -19,7 +20,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Login',
+          'Đăng Nhập',
           style: TextStyle(fontSize: 25,
               fontWeight: FontWeight.bold,
               color: Color(0xFF6495ED)),
@@ -38,7 +39,7 @@ class _LoginState extends State<Login> {
               TextFormField(
                 controller: _usernameController,
                 decoration: const InputDecoration(
-                  labelText: 'User name',
+                  labelText: 'Tên đăng nhập',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(
                         Radius.circular(20.0)), // Bo tròn góc
@@ -47,7 +48,7 @@ class _LoginState extends State<Login> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Username is required';
+                    return 'Vui lòng điền tên đăng nhập';
                   }
                   return null;
                 },
@@ -56,7 +57,7 @@ class _LoginState extends State<Login> {
               TextFormField(
                 controller: _passwordController,
                 decoration: const InputDecoration(
-                  labelText: 'Password',
+                  labelText: 'Mật khẩu',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(
                         Radius.circular(20.0)), // Bo tròn góc
@@ -66,7 +67,7 @@ class _LoginState extends State<Login> {
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Password is required';
+                    return 'Vui lòng điền mật khẩu';
                   }
                   return null; // Nếu không có lỗi, trả về null
                 },
@@ -89,8 +90,45 @@ class _LoginState extends State<Login> {
                     fontWeight: FontWeight.bold,
                   ), // Kiểu chữ
                 ),
-                child: const Text('Login'),
+                child: const Text('Đăng Nhập'),
               ),
+              Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      'Bạn đã có tài khoản',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Signup()),
+                      );
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        'Đăng ký',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),
@@ -109,7 +147,7 @@ class _LoginState extends State<Login> {
       // Hiển thị SnackBar
       Customer? savedCustomer = await SharedPreferencesHelper.getUserData();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Welcome, ${savedCustomer?.phone}!')),
+        SnackBar(content: Text('Welcome, ${savedCustomer?.fullname}!')),
       );
       // Đợi một khoảng thời gian để SnackBar hiển thị xong
       Future.delayed(const Duration(seconds: 2), () {
