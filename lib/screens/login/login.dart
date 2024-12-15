@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/screens/home/home.dart';
 import 'package:techshop_flutter/shared/services/customer/customerService.dart';
-import '../../models/Customer.dart';
+import '../../models/CustomerModel.dart';
 import '../../shared/ultis/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -109,7 +109,7 @@ class _LoginState extends State<Login> {
     if (customer != null) {
       await SharedPreferencesHelper.saveUserData(customer);
       // Hiển thị SnackBar
-      Customer? savedCustomer = await SharedPreferencesHelper.getUserData();
+      CustomerModel? savedCustomer = await SharedPreferencesHelper.getUserData();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Welcome, ${savedCustomer?.phone}!')),
       );
@@ -118,7 +118,7 @@ class _LoginState extends State<Login> {
         // Điều hướng đến màn hình Home
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Home()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       });
     } else {
