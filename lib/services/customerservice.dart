@@ -5,7 +5,7 @@ import '../models/Customer.dart';
 
 class CustomerService {
   // Đặt baseUrl của API
-  final String baseUrl = 'http://192.168.0.62:8080';// Thay đổi URL này thành đúng địa chỉ API của bạn
+  final String baseUrl = 'http://192.168.0.61:8080';// Thay đổi URL này thành đúng địa chỉ API của bạn
 
   // Hàm thêm customer (thêm khách hàng)
   Future<bool> addCustomer({
