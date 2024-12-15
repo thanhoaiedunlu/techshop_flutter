@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/screens/login/signUp.dart';
 import '../../shared/services/customer/customerService.dart';
+import 'package:techshop_flutter/screens/home/home.dart';
+import 'package:techshop_flutter/shared/services/customer/customerService.dart';
+import '../../models/CustomerModel.dart';
+import '../../models/Customer.dart';
+import '../../shared/services/customer/customerService.dart';
 import '../../shared/ultis/shared_preferences.dart';
 import '../home/home.dart';
 class Login extends StatefulWidget {
@@ -9,6 +14,7 @@ class Login extends StatefulWidget {
   @override
   State<Login> createState() => _LoginState();
 }
+
 class _LoginState extends State<Login> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -19,7 +25,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Đăng Nhập',
+          'Login',
           style: TextStyle(fontSize: 25,
               fontWeight: FontWeight.bold,
               color: Color(0xFF6495ED)),
@@ -144,7 +150,7 @@ class _LoginState extends State<Login> {
     if (customer != null) {
       await SharedPreferencesHelper.saveUserData(customer);
       // Hiển thị SnackBar
-      Customer? savedCustomer = await SharedPreferencesHelper.getUserData();
+      CustomerModel? savedCustomer = await SharedPreferencesHelper.getUserData();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Welcome, ${savedCustomer?.fullname}!')),
       );
@@ -153,7 +159,7 @@ class _LoginState extends State<Login> {
         // Điều hướng đến màn hình Home
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Home()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       });
     } else {
