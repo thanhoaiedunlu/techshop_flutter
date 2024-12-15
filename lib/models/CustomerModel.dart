@@ -1,4 +1,4 @@
-class Customer{
+class CustomerModel{
   final int id;
   final String fullname;
   final String username;
@@ -6,7 +6,7 @@ class Customer{
   final String phone;
   final bool role;
   final int cartId;
-  Customer({
+  CustomerModel({
     required this.id,
     required this.fullname,
     required this.username,
@@ -15,8 +15,8 @@ class Customer{
     required this.role,
     required this.cartId,
   });
-  factory Customer.fromJson(Map<String, dynamic> json) {
-    return Customer(
+  factory CustomerModel.fromJson(Map<String, dynamic> json) {
+    return CustomerModel(
       id: json['id'],
       fullname: json['fullname'],
       username: json['username'],
@@ -39,8 +39,8 @@ class Customer{
     };
   }
   // Khởi tạo đối tượng User từ Map (dữ liệu JSON)
-  factory Customer.fromMap(Map<String, dynamic> map) {
-    return Customer(
+  factory CustomerModel.fromMap(Map<String, dynamic> map) {
+    return CustomerModel(
       id: map['id'],
       fullname: map['fullname'],
       username: map['username'],
