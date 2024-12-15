@@ -170,12 +170,10 @@ class _SignupState extends State<Signup> {
     if (!mounted) return;
 
     if (isSuccess) {
-      // Handle successful registration (e.g., show success message, navigate to another screen)
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registration successful!')),
       );
     } else {
-      // Handle failed registration (e.g., show error message)
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registration failed. Please try again.')),
       );

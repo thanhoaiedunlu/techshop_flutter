@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:techshop_flutter/screens/home.dart';
+import '../models/Customer.dart';
 import '../services/customerservice.dart';
+import '../shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -13,7 +16,6 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordController = TextEditingController();
   final customerServices = CustomerService();
   final _formKey = GlobalKey<FormState>(); // Khai báo GlobalKey cho Form
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,15 +70,14 @@ class _LoginState extends State<Login> {
                   if (value == null || value.isEmpty) {
                     return 'Password is required';
                   }
+                  return null; // Nếu không có lỗi, trả về null
                 },
               ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState?.validate() ?? false) {
-                    // Nếu form hợp lệ, thực hiện đăng nhập
-                    // Xử lý đăng nhập ở đây (ví dụ gọi API)
-                    // customerServices.login(...);
+                    checkLogin();
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -98,7 +99,6 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-
   Future<void> checkLogin() async {
     final username = _usernameController.text;
     final password = _passwordController.text;
@@ -107,12 +107,27 @@ class _LoginState extends State<Login> {
       password: password,
     );
     if (customer != null) {
-      // Đăng nhập thành công, hiển thị thông báo
+      await SharedPreferencesHelper.saveUserData(customer);
+      // Hiển thị SnackBar
+      Customer? savedCustomer = await SharedPreferencesHelper.getUserData();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Welcome, ${customer.fullname}!')),
+        SnackBar(content: Text('Welcome, ${savedCustomer?.phone}!')),
+      );
+      // Đợi một khoảng thời gian để SnackBar hiển thị xong
+      Future.delayed(const Duration(seconds: 2), () {
+        // Điều hướng đến màn hình Home
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+        );
+      });
+    } else {
+      // Nếu không có customer, bạn có thể hiển thị lỗi hoặc thực hiện hành động khác.
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login failed. Please try again.')),
       );
     }
   }
-}
 
+}
 
