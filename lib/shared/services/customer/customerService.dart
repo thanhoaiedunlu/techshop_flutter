@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:techshop_flutter/models/Customer.dart';
 
-import '../models/Customer.dart';
 
 class CustomerService {
   // Đặt baseUrl của API

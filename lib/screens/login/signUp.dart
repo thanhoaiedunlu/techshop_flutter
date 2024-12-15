@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/customerservice.dart';
+import 'package:techshop_flutter/shared/services/customer/customerService.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
