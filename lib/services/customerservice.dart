@@ -46,7 +46,6 @@ class CustomerService {
     }
   }
 
-  Future<CustomerModel?> checkLogin({
     required String username,
     required String password,
   }) async {
@@ -68,7 +67,6 @@ class CustomerService {
       if (response.statusCode == 200) {
         // Parse dữ liệu từ JSON và trả về đối tượng User
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        return CustomerModel.fromJson(responseBody);
       } else {
         // Nếu đăng nhập thất bại, trả về null
         return null;
