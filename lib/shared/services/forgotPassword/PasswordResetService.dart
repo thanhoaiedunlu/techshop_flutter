@@ -1,0 +1,40 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:techshop_flutter/shared/constant/constants.dart';
+
+class PasswordResetService {
+  Future<bool> initPasswordReset({required String username}) async {
+    final url = Uri.parse('$baseUrl/api/customer/initPasswordReset/$username');
+    try {
+      final response = await http.post(url);
+      return response.statusCode == 200; // Trả về true nếu thành công
+    } catch (_) {
+      return false; // Trả về false nếu có lỗi
+    }
+  }
+
+  Future<bool> resetPassword({
+    required String username,
+    required String resetCode,
+    required String newPassword,
+  }) async {
+    final url = Uri.parse(
+        '$baseUrl/api/customer/resetPassword/$username?resetCode=$resetCode&newPassword=$newPassword');
+
+    print('Calling API: $url'); // In URL gọi API
+
+    try {
+      final response = await http.post(url);
+
+      // In statusCode và body để kiểm tra phản hồi từ server
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      return response.statusCode == 200;
+    } catch (e) {
+      print('Error: $e'); // In lỗi chi tiết
+      return false;
+    }
+  }
+
+}
