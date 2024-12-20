@@ -25,16 +25,9 @@ class PasswordResetService {
 
     try {
       final response = await http.post(url);
-
-      // In statusCode và body để kiểm tra phản hồi từ server
-      print('Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-
       return response.statusCode == 200;
-    } catch (e) {
-      print('Error: $e'); // In lỗi chi tiết
+    } catch (_) {
       return false;
     }
   }
-
 }

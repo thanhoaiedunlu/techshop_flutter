@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/ProductModel.dart';
+import 'package:techshop_flutter/routes/routes.dart';
 import 'package:techshop_flutter/shared/services/product/productService.dart';
 import 'package:techshop_flutter/shared/widgets/category/categoryList.dart';
 import 'package:techshop_flutter/shared/widgets/navigateBar/bottom.dart';
 import 'package:techshop_flutter/shared/widgets/navigateBar/top.dart';
-import 'package:techshop_flutter/shared/widgets/product/productList.dart'; // Đảm bảo đã import model Product
+import 'package:techshop_flutter/shared/widgets/product/productList.dart';
+
+import '../seachProduct/ProductSearch.dart'; // Đảm bảo đã import model Product
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,14 +20,13 @@ class _HomeScreenState extends State<HomeScreen> {
   // Tạo một instance của ProductService
   final ProductService _productService = ProductService();
   int _currentIndex = 0;
-  bool _isSearching = false;
   TextEditingController _searchController = TextEditingController();
   bool _isCategoryVisible = false; // Để điều khiển hiển thị danh mục
+  bool _isSearching = false;
   void _toggleSearch() {
-    setState(() {
-      _isSearching = !_isSearching; // Toggle search mode
-    });
+    Navigator.pushNamed(context, Routes.productSearch);
   }
+
 
   void _showCategoryModal() {
     showModalBottomSheet(
@@ -57,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                       child:
-                          CircularProgressIndicator()); // Hiển thị loading khi đang chờ dữ liệu
+                      CircularProgressIndicator()); // Hiển thị loading khi đang chờ dữ liệu
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text(
@@ -65,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(
                       child:
-                          Text('No products available.')); // Không có sản phẩm
+                      Text('No products available.')); // Không có sản phẩm
                 } else {
                   // Dữ liệu đã sẵn sàng, hiển thị danh sách sản phẩm
                   return ProductListView(products: snapshot.data!);
