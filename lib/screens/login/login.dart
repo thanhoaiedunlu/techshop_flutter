@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:techshop_flutter/screens/login/signUp.dart';
 import '../../shared/services/customer/customerService.dart';
 import 'package:techshop_flutter/screens/home/home.dart';
+import 'package:techshop_flutter/screens/login/signUp.dart';
 import 'package:techshop_flutter/shared/services/customer/customerService.dart';
 import '../../models/CustomerModel.dart';
-import '../../shared/services/customer/customerService.dart';
+import '../../routes/routes.dart';
 import '../../shared/ultis/shared_preferences.dart';
 import '../home/home.dart';
 class Login extends StatefulWidget {
@@ -156,10 +157,7 @@ class _LoginState extends State<Login> {
       // Đợi một khoảng thời gian để SnackBar hiển thị xong
       Future.delayed(const Duration(seconds: 2), () {
         // Điều hướng đến màn hình Home
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+        Navigator.pushNamed(context, Routes.home);
       });
     } else {
       // Nếu không có customer, bạn có thể hiển thị lỗi hoặc thực hiện hành động khác.
