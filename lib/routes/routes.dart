@@ -3,7 +3,7 @@ import 'package:techshop_flutter/screens/home/home.dart';
 
 class Routes {
   // Định nghĩa các route của ứng dụng
-  static const String home = '/';
+  static const String home = '/home';
   static const String receipt = '/receipt';
   static const String account = '/account';
 
@@ -12,6 +12,7 @@ class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case home:
+        print('vao dc');
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case receipt:
         // return MaterialPageRoute(builder: (_) => DetailScreen());

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:techshop_flutter/models/CategoryModel.dart';
 import 'package:techshop_flutter/shared/constant/constants.dart';
 import 'package:http/http.dart' as http;
