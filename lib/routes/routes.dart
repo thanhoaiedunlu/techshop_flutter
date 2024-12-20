@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:techshop_flutter/screens/account/EditProfile.dart';
+import 'package:techshop_flutter/screens/account/GetProfile.dart';
 import 'package:techshop_flutter/screens/forgotPassword/enterUsername.dart';
 import 'package:techshop_flutter/screens/home/home.dart';
 import 'package:techshop_flutter/screens/login/login.dart';
+import 'package:techshop_flutter/screens/seachProduct/ProductSearch.dart';
 import '../screens/forgotPassword/enterCode.dart';
 
 class Routes {
@@ -10,6 +13,12 @@ class Routes {
   static const String receipt = '/receipt';
   static const String account = '/account';
   static const String login = '/login';
+  static const String productSearch = '/productSearch';
+  static const String editAccount = '/editAccount';
+
+
+
+
 
   // Phương thức điều hướng
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -20,9 +29,19 @@ class Routes {
       case receipt:
       // return MaterialPageRoute(builder: (_) => DetailScreen());
       case account:
-      // return MaterialPageRoute(builder: (_) => AccountScreen());
+      final args = settings.arguments as int;
+      return MaterialPageRoute(
+        builder: (_) => GetProfile(id: args),
+      );
       case login:
         return MaterialPageRoute(builder: (_) => const Login());
+      case productSearch:
+        return MaterialPageRoute(builder: (_) => const ProductSearch());
+      case editAccount:
+        final args = settings.arguments as int;
+        return MaterialPageRoute(
+          builder: (_) => EditProfile(id: args),
+        );
       default:
         return _errorRoute();
     }
