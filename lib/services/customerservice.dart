@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:techshop_flutter/models/CustomerModel.dart';
 
-import '../models/Customer.dart';
 
 class CustomerService {
   // Đặt baseUrl của API
@@ -46,7 +46,7 @@ class CustomerService {
     }
   }
 
-  Future<Customer?> checkLogin({
+  Future<CustomerModel?> checkLogin({
     required String username,
     required String password,
   }) async {
@@ -68,7 +68,7 @@ class CustomerService {
       if (response.statusCode == 200) {
         // Parse dữ liệu từ JSON và trả về đối tượng User
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        return Customer.fromJson(responseBody);
+        return CustomerModel.fromJson(responseBody);
       } else {
         // Nếu đăng nhập thất bại, trả về null
         return null;
