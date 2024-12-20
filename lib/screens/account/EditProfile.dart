@@ -48,13 +48,12 @@ class _EditProfileState extends State<EditProfile> {
     final updatedCustomer = CustomerModel(
       id: _customer!.id,
       fullname: _fullnameController.text,
-      username: _customer!.username,
-      // Username không thay đổi
+      username: _customer!.username, // Không thay đổi username
       email: _emailController.text,
       phone: _phoneController.text,
       role: _customer!.role,
       cartId: _customer!.cartId,
-      password: _customer!.password,
+      password: _passwordController.text, // Sử dụng giá trị từ input
     );
 
     final accountService = AccountService();

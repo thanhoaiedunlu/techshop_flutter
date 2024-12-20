@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/ProductModel.dart';
+import 'package:techshop_flutter/screens/detailProduct/DetailProduct.dart';
 
 class ProductListView extends StatelessWidget {
   final List<ProductModel> products;
@@ -33,15 +34,16 @@ class ProductListView extends StatelessWidget {
                 );
               },
             ),
-            onTap: () {
-              // // Chuyển đến màn hình chi tiết sản phẩm
-              // Navigator.push(
-              //   context,
-              //   // MaterialPageRoute(
-              //   //   builder: (context) => ProductDetailScreen(product: product),
-              //   // ),
-              // );
-            },
+              onTap: () {
+                // Điều hướng đến màn hình chi tiết sản phẩm và truyền productId
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailProduct(productId: product.id),
+                  ),
+                );
+              }
+
           ),
         );
       },
