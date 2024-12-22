@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/screens/login/login.dart';
-import 'package:techshop_flutter/screens/login/signUp.dart';
+
 void main() {
   runApp(const MyApp());
 }
