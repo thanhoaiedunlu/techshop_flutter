@@ -1,4 +1,4 @@
-class CustomerModel{
+class CustomerModel {
   final int id;
   final String fullname;
   final String username;
@@ -6,6 +6,8 @@ class CustomerModel{
   final String phone;
   final bool role;
   final int cartId;
+  final String password; // Thêm trường password
+
   CustomerModel({
     required this.id,
     required this.fullname,
@@ -14,7 +16,9 @@ class CustomerModel{
     required this.phone,
     required this.role,
     required this.cartId,
+    required this.password, // Thêm trường password vào constructor
   });
+
   factory CustomerModel.fromJson(Map<String, dynamic> json) {
     return CustomerModel(
       id: json['id'],
@@ -24,8 +28,10 @@ class CustomerModel{
       phone: json['phone'],
       role: json['role'],
       cartId: json['cartId'],
+      password: json['password'] ?? '', // Xử lý trường password nếu JSON không có
     );
   }
+
   // Chuyển đối tượng User thành Map
   Map<String, dynamic> toMap() {
     return {
@@ -36,8 +42,10 @@ class CustomerModel{
       'phone': phone,
       'role': role,
       'cartId': cartId,
+      'password': password, // Thêm trường password vào map
     };
   }
+
   // Khởi tạo đối tượng User từ Map (dữ liệu JSON)
   factory CustomerModel.fromMap(Map<String, dynamic> map) {
     return CustomerModel(
@@ -48,6 +56,7 @@ class CustomerModel{
       phone: map['phone'],
       role: map['role'],
       cartId: map['cartId'],
+      password: map['password'] ?? '', // Xử lý trường password nếu không có
     );
-}
+  }
 }
