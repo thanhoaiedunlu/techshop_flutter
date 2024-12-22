@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/routes/routes.dart';
 import 'package:techshop_flutter/screens/Account/GetProfile.dart';
+import 'package:techshop_flutter/screens/detailProduct/DetailProduct.dart';
 import 'package:techshop_flutter/screens/forgotPassword/enterCode.dart';
 import 'package:techshop_flutter/screens/forgotPassword/enterUsername.dart';
 import 'package:techshop_flutter/screens/home/home.dart';
