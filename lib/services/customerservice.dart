@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:techshop_flutter/models/CustomerModel.dart';
-
 
 class CustomerService {
   // Đặt baseUrl của API
-  final String baseUrl = 'http://192.168.0.61:8080';// Thay đổi URL này thành đúng địa chỉ API của bạn
+  final String baseUrl = 'http://192.168.0.61:8080'; // Thay đổi URL này thành đúng địa chỉ API của bạn
 
   // Hàm thêm customer (thêm khách hàng)
   Future<bool> addCustomer({
@@ -27,13 +25,14 @@ class CustomerService {
       'password': password, // Mật khẩu
       'phone': phone, // Số điện thoại
     });
+
     try {
       final response = await http.post(
         url,
         headers: headers,
         body: body,
       );
-      if (response.statusCode == 2) {
+      if (response.statusCode == 201) {
         // Thành công, trả về true
         return true;
       } else {
@@ -42,10 +41,13 @@ class CustomerService {
       }
     } catch (e) {
       // Xử lý lỗi khi có sự cố kết nối (timeout, không thể kết nối đến API)
+      print('Lỗi khi thêm khách hàng: $e');
       return false;
     }
   }
 
+  // Hàm đăng nhập
+  Future<Map<String, dynamic>?> login({
     required String username,
     required String password,
   }) async {
@@ -58,6 +60,7 @@ class CustomerService {
       'username': username, // Tên đăng nhập
       'password': password, // Mật khẩu
     });
+
     try {
       final response = await http.post(
         url,
@@ -65,17 +68,17 @@ class CustomerService {
         body: body,
       );
       if (response.statusCode == 200) {
-        // Parse dữ liệu từ JSON và trả về đối tượng User
+        // Parse dữ liệu từ JSON và trả về đối tượng Map
         final Map<String, dynamic> responseBody = json.decode(response.body);
+        return responseBody;
       } else {
         // Nếu đăng nhập thất bại, trả về null
         return null;
       }
     } catch (e) {
       // Xử lý lỗi khi có sự cố kết nối
+      print('Lỗi khi đăng nhập: $e');
       return null;
     }
   }
-
 }
-
