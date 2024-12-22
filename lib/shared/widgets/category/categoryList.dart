@@ -1,90 +1,104 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/CategoryModel.dart';
 import 'package:techshop_flutter/shared/services/category/categoryService.dart';
+import 'package:techshop_flutter/routes/routes.dart';
 
-class CategoryListView extends StatefulWidget {
+class CategoryListView extends StatelessWidget {
   const CategoryListView({super.key});
 
   @override
-  _CategoryListViewState createState() => _CategoryListViewState();
-}
-
-class _CategoryListViewState extends State<CategoryListView> with TickerProviderStateMixin {
-  final CategoryService _categoryService = CategoryService();
-  late AnimationController _controller;
-  late Animation<Offset> _slideAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(-1, 0), // Bắt đầu từ bên trái
-      end: const Offset(0, 0),    // Kết thúc tại vị trí bình thường
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.linear,
-    ));
-
-    // Kích hoạt animation khi widget được xây dựng
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
+    final CategoryService _categoryService = CategoryService();
 
     return GestureDetector(
-      onTap: () {
-        Navigator.pop(context); // Đóng modal khi bấm bên ngoài
-      },
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0), // Làm mờ nền
-        child: Container(
-          color: Colors.black.withOpacity(0.5), // Làm tối nền
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: SlideTransition(
-              position: _slideAnimation,
-              child: Container(
-                width: screenWidth * 2 / 3, // Chiếm 2/3 màn hình
-                height: double.infinity,
+      // Detect taps outside the modal to close it
+      onTap: () => Navigator.of(context).pop(),
+      child: Scaffold(
+        backgroundColor: Colors.transparent, // Transparent background
+        body: Align(
+          alignment: Alignment.centerLeft,
+          child: GestureDetector(
+            // Prevent tap events from propagating to the background
+            onTap: () {},
+            child: Container(
+              width: MediaQuery.of(context).size.width *
+                  0.5, // 80% of screen width
+              height: double.infinity,
+              decoration: const BoxDecoration(
                 color: Colors.white,
-                child: FutureBuilder<List<CategoryModel>>(
-                  future: _categoryService.getCategories(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No categories available.'));
-                    } else {
-                      return ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(snapshot.data![index].name),
-                            onTap: () {
-                              // Xử lý khi chọn danh mục
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10.0,
+                    spreadRadius: 5.0,
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  // Header with a close button
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 20.0),
+                    color: Colors.blue,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Categories',
+                          style: TextStyle(color: Colors.white, fontSize: 20.0),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Expanded list of categories
+                  Expanded(
+                    child: FutureBuilder<List<CategoryModel>>(
+                      future: _categoryService.getCategories(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text(
+                                  'Error: ${snapshot.error}')); // Display error
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Center(
+                              child: Text('No categories available.'));
+                        } else {
+                          // Display the list of categories
+                          return ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              final category = snapshot.data![index];
+                              return ListTile(
+                                title: Text(category.name),
+                                onTap: () {
+                                  // Handle category selection
+                                  Navigator.of(context)
+                                      .pop(); // Close the modal
+                                  // Navigate to the selected category's page
+                                  // Navigator.pushNamed(
+                                  //   context,
+                                  //   Routes.categoryDetails,
+                                  //   arguments: category,
+                                  // );
+                                },
+                              );
                             },
                           );
-                        },
-                      );
-                    }
-                  },
-                ),
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

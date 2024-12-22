@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/ProductModel.dart';
 import 'package:techshop_flutter/routes/routes.dart';
@@ -23,21 +25,53 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _searchController = TextEditingController();
   bool _isCategoryVisible = false; // Để điều khiển hiển thị danh mục
   bool _isSearching = false;
+
   void _toggleSearch() {
     Navigator.pushNamed(context, Routes.productSearch);
   }
 
-
   void _showCategoryModal() {
-    showModalBottomSheet(
+    showGeneralDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent, // Để làm tối màn hình dưới
-      builder: (BuildContext context) {
-        return CategoryListView();
+      barrierDismissible: true, // Allows dismissing by tapping outside
+      barrierLabel: 'Categories', // Accessibility label
+      barrierColor: Colors.transparent, // We'll handle the blur ourselves
+      transitionDuration: const Duration(milliseconds: 300), // Transition duration
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return const CategoryListView();
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return Stack(
+          children: [
+            // Blurred and faded background
+            FadeTransition(
+              opacity: animation,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                child: Container(
+                  color: Colors.black.withOpacity(0.5), // Semi-transparent overlay
+                ),
+              ),
+            ),
+            // Sliding modal from left
+            SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(-1.0, 0.0), // Start off-screen to the left
+                end: Offset.zero, // End at original position
+              ).animate(
+                CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeInOut, // Smooth animation curve
+                ),
+              ),
+              child: child,
+            ),
+          ],
+        );
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                       child:
-                      CircularProgressIndicator()); // Hiển thị loading khi đang chờ dữ liệu
+                          CircularProgressIndicator()); // Hiển thị loading khi đang chờ dữ liệu
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text(
@@ -67,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(
                       child:
-                      Text('No products available.')); // Không có sản phẩm
+                          Text('No products available.')); // Không có sản phẩm
                 } else {
                   // Dữ liệu đã sẵn sàng, hiển thị danh sách sản phẩm
                   return ProductListView(products: snapshot.data!);

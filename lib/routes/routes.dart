@@ -16,10 +16,6 @@ class Routes {
   static const String productSearch = '/productSearch';
   static const String editAccount = '/editAccount';
 
-
-
-
-
   // Phương thức điều hướng
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
