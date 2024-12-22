@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../routes/routes.dart';
+import '../../ultis/shared_preferences.dart';
+
 class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex; // Tab hiện tại
 
@@ -14,7 +17,7 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   // Hàm xử lý khi tab được chọn
-  void _onTabTapped(int index) {
+  Future<void> _onTabTapped(int index) async {
     // Dẫn đến các màn hình tương ứng khi bấm vào các tab
     switch (index) {
       case 0:
@@ -27,7 +30,18 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         Navigator.pushNamed(context, '/cart');
         break;
       case 3:
-        Navigator.pushNamed(context, '/account');
+        final userId = await SharedPreferencesHelper.getUserId();
+        if (userId != null) {
+          Navigator.pushNamed(
+            context,
+            Routes.account,
+            arguments: userId,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please log in to view your account.')),
+          );
+        }
         break;
     }
   }
