@@ -19,4 +19,24 @@ class ChartService {
       rethrow;
     }
   }
+  // Tạo dữ liệu mẫu
+  // Future<List<Revenue>> getRevenueData() async {
+  //   return Future.delayed(
+  //     const Duration(seconds: 1),
+  //         () => [
+  //       Revenue(month: 1, revenue: 10000000),
+  //       Revenue(month: 2, revenue: 15000000),
+  //       Revenue(month: 3, revenue: 20000000),
+  //       Revenue(month: 4, revenue: 25000000),
+  //       Revenue(month: 5, revenue: 30000000),
+  //       Revenue(month: 6, revenue: 50000000),
+  //       Revenue(month: 7, revenue: 45000000),
+  //       Revenue(month: 8, revenue: 40000000),
+  //       Revenue(month: 9, revenue: 60000000),
+  //       Revenue(month: 10, revenue: 70000000),
+  //       Revenue(month: 11, revenue: 80000000),
+  //       Revenue(month: 12, revenue: 90000000),
+  //     ],
+  //   );
+  // }
 }
