@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:techshop_flutter/shared/ultis/shared_preferences.dart';
 import '../../models/ProductModel.dart';
+import '../../shared/services/cartItem/CartItemService.dart';
 import '../../shared/services/product/productService.dart';
 
 class DetailProduct extends StatefulWidget {
   final int productId;
 
-  const DetailProduct({Key? key, required this.productId}) : super(key: key);
+  const DetailProduct({super.key, required this.productId});
 
   @override
   State<DetailProduct> createState() => _DetailProductState();
@@ -22,7 +24,7 @@ class _DetailProductState extends State<DetailProduct> {
 
   Future<ProductModel> _fetchProductDetail(int productId) async {
     final productService = ProductService();
-    return await productService.getProductDetail(productId.toString());  // Chuyển đổi id sang String nếu cần
+    return await productService.getProductDetail(productId.toString());
   }
 
   @override
@@ -39,91 +41,122 @@ class _DetailProductState extends State<DetailProduct> {
           },
         ),
       ),
-      body: FutureBuilder<ProductModel>(
-        future: _productDetail,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
-            return const Center(child: Text('No details available.'));
-          } else {
-            final product = snapshot.data!;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Center(
-                    child: Image.network(
-                      product.img, // Hình ảnh sản phẩm từ API
-                      height: 200,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    product.name, // Tên sản phẩm
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    "Danh Mục: ${product.categoryName}", // Danh mục sản phẩm
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: Text(
-                    "Giá: ${product.price} VND", // Giá sản phẩm
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: Text(
-                    product.detail, // Mô tả sản phẩm
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ),
-                const Spacer(),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Logic thêm vào giỏ hàng
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(250, 52),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+      body: SafeArea(
+        child: FutureBuilder<ProductModel>(
+          future: _productDetail,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData) {
+              return const Center(child: Text('No details available.'));
+            } else {
+              final product = snapshot.data!;
+              return Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Center(
+                              child: Image.network(
+                                product.img,
+                                height: 200,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(
+                              product.name,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(
+                              "Danh Mục: ${product.categoryName}",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            child: Text(
+                              "Giá: ${product.price} VND",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            child: Text(
+                              product.detail,
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ],
                       ),
-                      backgroundColor: Colors.blue,
-                    ),
-                    child: const Text(
-                      "Thêm vào giỏ hàng",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            );
-          }
-        },
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    color: Colors.white,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final cartId =
+                            await SharedPreferencesHelper.getCartIdByUserLogin();
+                        if (cartId != null) {
+                          final success = await CartItemService()
+                              .addCartItem(cartId, product.id, 1);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                success
+                                    ? 'Added ${product.name} to cart!'
+                                    : 'Failed to add ${product.name} to cart.',
+                              ),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                              Text('Failed to retrieve cart ID. Please log in.'),
+                            ),
+                          );
+                        }                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(300, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        backgroundColor: Colors.blue,
+                      ),
+                      child: const Text(
+                        "Thêm vào giỏ hàng",
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
+          },
+        ),
       ),
       backgroundColor: Colors.white,
     );
