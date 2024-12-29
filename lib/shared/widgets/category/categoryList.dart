@@ -85,11 +85,11 @@ class CategoryListView extends StatelessWidget {
                                   Navigator.of(context)
                                       .pop(); // Close the modal
                                   // Navigate to the selected category's page
-                                  // Navigator.pushNamed(
-                                  //   context,
-                                  //   Routes.categoryDetails,
-                                  //   arguments: category,
-                                  // );
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.productCategory,
+                                    arguments: category,
+                                  );
                                 },
                               );
                             },
