@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:techshop_flutter/shared/ultis/shared_preferences.dart';
 import '../../models/ProductModel.dart';
+import '../../shared/services/cartItem/CartItemService.dart';
 import '../../shared/services/product/productService.dart';
 
 class DetailProduct extends StatefulWidget {
   final int productId;
 
-  const DetailProduct({Key? key, required this.productId}) : super(key: key);
+  const DetailProduct({super.key, required this.productId});
 
   @override
   State<DetailProduct> createState() => _DetailProductState();
@@ -113,9 +115,30 @@ class _DetailProductState extends State<DetailProduct> {
                     padding: const EdgeInsets.all(16.0),
                     color: Colors.white,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Logic thêm vào giỏ hàng
-                      },
+                      onPressed: () async {
+                        final cartId =
+                            await SharedPreferencesHelper.getCartIdByUserLogin();
+                        if (cartId != null) {
+                          final success = await CartItemService()
+                              .addCartItem(cartId, product.id, 1);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                success
+                                    ? 'Added ${product.name} to cart!'
+                                    : 'Failed to add ${product.name} to cart.',
+                              ),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                              Text('Failed to retrieve cart ID. Please log in.'),
+                            ),
+                          );
+                        }                      },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(300, 50),
                         shape: RoundedRectangleBorder(

@@ -12,10 +12,12 @@ class CustomBottomNavigationBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CustomBottomNavigationBarState createState() => _CustomBottomNavigationBarState();
+  _CustomBottomNavigationBarState createState() =>
+      _CustomBottomNavigationBarState();
 }
 
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+class _CustomBottomNavigationBarState
+    extends State<CustomBottomNavigationBar> {
   // Hàm xử lý khi tab được chọn
   Future<void> _onTabTapped(int index) async {
     // Dẫn đến các màn hình tương ứng khi bấm vào các tab
@@ -39,7 +41,8 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please log in to view your account.')),
+            const SnackBar(
+                content: Text('Please log in to view your account.')),
           );
         }
         break;
@@ -78,11 +81,15 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed, // Phân bổ đều các mục
       currentIndex: widget.currentIndex,
       onTap: _onTabTapped,
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.grey,
-      iconSize: 30.0, // Đặt kích thước cố định cho tất cả các biểu tượng
+      selectedIconTheme: const IconThemeData(size: 30.0), // Đồng bộ kích thước biểu tượng
+      unselectedIconTheme: const IconThemeData(size: 30.0), // Đồng bộ kích thước biểu tượng
+      showSelectedLabels: true, // Hiển thị nhãn cho mục được chọn
+      showUnselectedLabels: true, // Hiển thị nhãn cho mục không được chọn
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -103,4 +110,5 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       ],
     );
   }
+
 }
