@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:techshop_flutter/models/CustomerModel.dart';
+import 'package:techshop_flutter/routes/routes.dart';
 import 'package:techshop_flutter/screens/home/home.dart';
+import 'package:techshop_flutter/screens/login/signUp.dart';
 import 'package:techshop_flutter/shared/services/customer/customerService.dart';
-import '../../models/Customer.dart';
 import '../../shared/ultis/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -22,7 +24,8 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title: const Text(
           'Đăng Nhập',
-          style: TextStyle(fontSize: 25,
+          style: TextStyle(
+              fontSize: 25,
               fontWeight: FontWeight.bold,
               color: Color(0xFF6495ED)),
         ),
@@ -42,8 +45,8 @@ class _LoginState extends State<Login> {
                 decoration: const InputDecoration(
                   labelText: 'Tên đăng nhập',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(20.0)), // Bo tròn góc
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
                   ),
                   prefixIcon: Icon(Icons.account_circle),
                 ),
@@ -60,8 +63,8 @@ class _LoginState extends State<Login> {
                 decoration: const InputDecoration(
                   labelText: 'Mật khẩu',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(20.0)), // Bo tròn góc
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
                   ),
                   prefixIcon: Icon(Icons.lock),
                 ),
@@ -113,7 +116,7 @@ class _LoginState extends State<Login> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Signup()),
+                        MaterialPageRoute(builder: (context) => const Signup()),
                       );
                     },
                     child: const Padding(
@@ -136,6 +139,7 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+
   Future<void> checkLogin() async {
     final username = _usernameController.text;
     final password = _passwordController.text;
@@ -146,7 +150,8 @@ class _LoginState extends State<Login> {
     if (customer != null) {
       await SharedPreferencesHelper.saveUserData(customer);
       // Hiển thị SnackBar
-      CustomerModel? savedCustomer = await SharedPreferencesHelper.getUserData();
+      CustomerModel? savedCustomer =
+          await SharedPreferencesHelper.getUserData();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Welcome, ${savedCustomer?.fullname}!')),
       );
@@ -162,6 +167,4 @@ class _LoginState extends State<Login> {
       );
     }
   }
-
 }
-

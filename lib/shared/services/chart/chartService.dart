@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:techshop_flutter/shared/constant/constants.dart';
 import '../../../models/Revenue.dart';
 class ChartService {
-  final String baseUrl = 'http://192.168.0.62:8080';
   // Hàm gọi API và lấy dữ liệu
   Future<List<Revenue>> getRevenueData() async {
     try {
