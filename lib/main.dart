@@ -45,10 +45,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-
-      home:AdminOrderManagement(
-
-      ),
+      home: const Login(),
       // Sử dụng onGenerateRoute để điều hướng
       onGenerateRoute: Routes.generateRoute,
     );

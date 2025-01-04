@@ -11,7 +11,7 @@ import 'package:techshop_flutter/screens/productCategory/ProductCategory.dart';
 import 'package:techshop_flutter/screens/seachProduct/ProductSearch.dart';
 
 class Routes {
-  static const String home = '/';
+  static const String home = '/home';
   static const String receipt = '/receipt';
   static const String account = '/account';
   static const String login = '/login';
