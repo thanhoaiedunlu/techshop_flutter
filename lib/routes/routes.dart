@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/CategoryModel.dart';
+import 'package:techshop_flutter/models/OrderModel.dart';
 import 'package:techshop_flutter/screens/Account/GetProfile.dart';
 import 'package:techshop_flutter/screens/account/EditProfile.dart';
 import 'package:techshop_flutter/screens/address/Address.dart';
@@ -9,13 +10,15 @@ import 'package:techshop_flutter/screens/detailProduct/DetailProduct.dart';
 import 'package:techshop_flutter/screens/home/home.dart';
 import 'package:techshop_flutter/screens/login/login.dart';
 import 'package:techshop_flutter/screens/order/OrderInformation.dart';
+import 'package:techshop_flutter/screens/order/orderDetail.dart';
+import 'package:techshop_flutter/screens/order/orderHistory.dart';
 import 'package:techshop_flutter/screens/productCategory/ProductCategory.dart';
 import 'package:techshop_flutter/screens/seachProduct/ProductSearch.dart';
 
 import '../models/CartItemModel.dart';
 
 class Routes {
-  static const String home = '/';
+  static const String home = '/home';
   static const String receipt = '/receipt';
   static const String account = '/account';
   static const String login = '/login';
@@ -26,6 +29,8 @@ class Routes {
   static const String productCategory = '/productCategory';
   static const String checkout = '/checkout';
   static const String addressList = '/addressList';
+  static const String orderHistoryClient = '/orderHistoryClient';
+  static const String orderHistoryDetail = '/orderHistoryDetail';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -85,6 +90,22 @@ class Routes {
         return _errorRoute(); // Nếu arguments không đúng kiểu
       case addressList:
         return MaterialPageRoute(builder: (_) => const AddressListPage());
+      case orderHistoryClient:
+        // Màn hình lịch sử đơn hàng
+        return MaterialPageRoute(
+          builder: (_) => OrderHistoryScreen(),
+        );
+
+      case orderHistoryDetail:
+        // Giả sử bạn truyền thẳng OrderModel sang màn hình chi tiết
+        // Hoặc chỉ truyền orderId (tuỳ bạn)
+        if (settings.arguments is OrderModel) {
+          final order = settings.arguments as OrderModel;
+          return MaterialPageRoute(
+            builder: (_) => OrderDetailScreen(order: order),
+          );
+        }
+        return _errorRoute(); // Nếu arguments không đúng kiểu/ Nếu arguments không đúng kiểu
       default:
         return _errorRoute(); // Trường hợp không tìm thấy route
     }

@@ -156,9 +156,8 @@ class _LoginState extends State<Login> {
       );
       // Đợi một khoảng thời gian để SnackBar hiển thị xong
       Future.delayed(const Duration(seconds: 2), () {
-        // Điều hướng đến màn hình Home
+        Navigator.pushReplacementNamed(context, Routes.home);
       });
-      Navigator.pushReplacementNamed(context, Routes.home);
     } else {
       // Nếu không có customer, bạn có thể hiển thị lỗi hoặc thực hiện hành động khác.
       ScaffoldMessenger.of(context).showSnackBar(

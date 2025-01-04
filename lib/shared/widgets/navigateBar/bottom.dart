@@ -16,8 +16,7 @@ class CustomBottomNavigationBar extends StatefulWidget {
       _CustomBottomNavigationBarState();
 }
 
-class _CustomBottomNavigationBarState
-    extends State<CustomBottomNavigationBar> {
+class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   // Hàm xử lý khi tab được chọn
   Future<void> _onTabTapped(int index) async {
     // Dẫn đến các màn hình tương ứng khi bấm vào các tab
@@ -26,7 +25,7 @@ class _CustomBottomNavigationBarState
         Navigator.pushNamed(context, '/');
         break;
       case 1:
-        Navigator.pushNamed(context, '/receipt');
+        Navigator.pushNamed(context, Routes.orderHistoryClient);
         break;
       case 2:
         Navigator.pushNamed(context, Routes.cart);
@@ -81,15 +80,20 @@ class _CustomBottomNavigationBarState
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed, // Phân bổ đều các mục
+      type: BottomNavigationBarType.fixed,
+      // Phân bổ đều các mục
       currentIndex: widget.currentIndex,
       onTap: _onTabTapped,
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.grey,
-      selectedIconTheme: const IconThemeData(size: 30.0), // Đồng bộ kích thước biểu tượng
-      unselectedIconTheme: const IconThemeData(size: 30.0), // Đồng bộ kích thước biểu tượng
-      showSelectedLabels: true, // Hiển thị nhãn cho mục được chọn
-      showUnselectedLabels: true, // Hiển thị nhãn cho mục không được chọn
+      selectedIconTheme: const IconThemeData(size: 30.0),
+      // Đồng bộ kích thước biểu tượng
+      unselectedIconTheme: const IconThemeData(size: 30.0),
+      // Đồng bộ kích thước biểu tượng
+      showSelectedLabels: true,
+      // Hiển thị nhãn cho mục được chọn
+      showUnselectedLabels: true,
+      // Hiển thị nhãn cho mục không được chọn
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -110,5 +114,4 @@ class _CustomBottomNavigationBarState
       ],
     );
   }
-
 }

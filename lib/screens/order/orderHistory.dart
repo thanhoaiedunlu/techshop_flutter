@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techshop_flutter/routes/routes.dart';
 import '../../models/OrderModel.dart';
 import '../../shared/services/order/OrderService.dart';
 import '../../shared/constant/constants.dart';
@@ -17,7 +18,6 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   void initState() {
     super.initState();
     _futureOrders = _orderService.getOrders(); // Lấy danh sách đơn hàng
-
   }
 
   // Hàm trả về màu sắc trạng thái
@@ -75,7 +75,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           }
 
           final orders = snapshot.data!;
-          final allOrderDetails = orders.expand((order) => order.orderDetails).toList();
+          final allOrderDetails =
+              orders.expand((order) => order.orderDetails).toList();
 
           return ListView.builder(
             padding: const EdgeInsets.all(10),
@@ -83,7 +84,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             itemBuilder: (context, index) {
               final detail = allOrderDetails[index];
               final product = detail.productResponseDTO;
-              final order = orders.firstWhere((order) => order.orderDetails.contains(detail));
+              final order = orders
+                  .firstWhere((order) => order.orderDetails.contains(detail));
 
               return Card(
                 color: Colors.white,
@@ -94,11 +96,13 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                     width: 70,
                     height: 100,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                    errorBuilder: (context, error, stackTrace) =>
+                        Icon(Icons.error),
                   ),
                   title: Text(
                     product.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   subtitle: Text(
                     'Giá: ${product.price}đ\nSố lượng: ${detail.quantity}',
@@ -109,16 +113,11 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                     style: TextStyle(
                       color: getStatusColor(order.status),
                       fontWeight: FontWeight.bold,
-
                     ),
                   ),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OrderDetailScreen(order: orders.firstWhere((order) => order.orderDetails.contains(detail))),
-                      ),
-                    );
+                    Navigator.pushNamed(context, Routes.orderHistoryDetail,
+                        arguments: order);
                   },
                 ),
               );

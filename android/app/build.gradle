@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.techshop_flutter"
-    compileSdkVersion 33
+    compileSdkVersion 34
     ndkVersion = flutter.ndkVersion
 
     defaultConfig {

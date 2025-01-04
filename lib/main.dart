@@ -12,7 +12,6 @@ import 'package:techshop_flutter/screens/order/adminOrderManagement.dart';
 import 'package:techshop_flutter/screens/order/orderHistory.dart';
 import 'package:techshop_flutter/screens/order/orderDetail.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -46,9 +45,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-      home:AdminOrderManagement(
-
-      ),
+      home: const Login(),
       // Sử dụng onGenerateRoute để điều hướng
       onGenerateRoute: Routes.generateRoute,
     );

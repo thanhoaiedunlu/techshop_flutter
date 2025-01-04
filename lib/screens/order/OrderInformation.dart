@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/CartItemModel.dart';
 import 'package:techshop_flutter/models/address/AddressModel.dart';
+import 'package:techshop_flutter/models/order/OrderRequestDto.dart';
 import 'package:techshop_flutter/routes/routes.dart';
+import 'package:techshop_flutter/shared/constant/constants.dart';
 import 'package:techshop_flutter/shared/services/address/AddressService.dart';
+import 'package:techshop_flutter/shared/services/cartItem/CartItemService.dart';
+import 'package:techshop_flutter/shared/services/order/OrderService.dart';
 import 'package:techshop_flutter/shared/utils/shared_preferences.dart';
+
+// Enum mở rộng 4 phương thức, nhưng ví dụ này chỉ gắn radio cho COD, MOMO.
 
 class OrderSummaryPage extends StatefulWidget {
   final List<CartItemModel> cartItems;
@@ -19,6 +25,9 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
   final AddressService _addressService = AddressService();
   bool _isSubmitting = false;
 
+  /// Biến lưu phương thức thanh toán hiện tại (radio)
+  PaymentMethod _selectedPaymentMethod = PaymentMethod.COD;
+
   @override
   void initState() {
     super.initState();
@@ -31,50 +40,192 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     return await _addressService.getAddressByCustomerIdAndIsDefault(customerId);
   }
 
+  /// Tính tổng giá
   double get totalPrice {
-    return widget.cartItems
-        .fold(0, (total, item) => total + (item.product.price * item.quantity));
+    return widget.cartItems.fold(
+      0,
+      (total, item) => total + (item.product.price * item.quantity),
+    );
   }
 
+  String convertPaymentMethodToString(PaymentMethod pm) {
+    switch (pm) {
+      case PaymentMethod.COD:
+        return "COD";
+      case PaymentMethod.MOMO:
+        return "MOMO";
+      case PaymentMethod.ZALO_PAY:
+        return "ZALO_PAY";
+      case PaymentMethod.VN_PAY:
+        return "VN_PAY";
+    }
+  }
+
+  /// Hàm bấm nút "Xác nhận Đặt hàng"
   void _confirmOrder() async {
     setState(() {
       _isSubmitting = true;
     });
 
-    // TODO: Thực hiện gọi API đặt hàng với widget.cartItems
-    // Ví dụ giả sử gọi API thành công:
-    bool success = true; // Thay bằng kết quả từ API thực tế
+    try {
+      final customerId = await SharedPreferencesHelper.getUserId();
+      final cartId = await SharedPreferencesHelper.getCartIdByUserLogin();
+      if (customerId == null) {
+        setState(() => _isSubmitting = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Bạn cần đăng nhập để đặt hàng.')),
+        );
+        return;
+      }
 
-    await Future.delayed(
-        const Duration(seconds: 2)); // Giả lập thời gian gọi API
+      // Lấy danh sách chi tiết
+      final orderDetails = widget.cartItems.map((item) {
+        return OrderDetailRequestDto(
+          productId: item.product.id,
+          quantity: item.quantity,
+        );
+      }).toList();
 
-    setState(() {
-      _isSubmitting = false;
-    });
+      final addressModel = await _addressFuture;
+      if (addressModel == null) {
+        setState(() => _isSubmitting = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Vui lòng thêm địa chỉ trước khi đặt hàng.')),
+        );
+        return;
+      }
 
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đơn hàng đã được đặt thành công!')),
+      // Tạo dto
+      final dto = OrderRequestDto(
+        customerId: customerId,
+        totalAmount: totalPrice.toInt(),
+        address: addressModel.address,
+        numberPhone: addressModel.numberPhone,
+        receiver: addressModel.receiver,
+        orderDetails: orderDetails,
       );
-      Navigator.popUntil(
-          context, ModalRoute.withName(Routes.home)); // Quay về trang chính
-    } else {
+
+      final methodString = _mapPaymentMethodToServer(_selectedPaymentMethod);
+      final statusString = "PENDING";
+
+      final orderId = await OrderService.saveOrder(
+        methodString,
+        statusString,
+        dto,
+      );
+      setState(() => _isSubmitting = false);
+
+      if (orderId != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Đặt hàng thành công! Mã đơn: $orderId')),
+        );
+        Navigator.popUntil(context, ModalRoute.withName(Routes.home));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Đặt hàng thất bại! Vui lòng thử lại.')),
+        );
+      }
+      var bool = await CartItemService.deleteCartItemByCartId(cartId!);
+    } catch (e) {
+      print('Exception in _confirmOrder: $e');
+      setState(() => _isSubmitting = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đặt hàng thất bại! Vui lòng thử lại.')),
+        const SnackBar(content: Text('Lỗi khi tạo đơn hàng.')),
       );
     }
   }
 
+// Hàm map enum Flutter -> string
+  String _mapPaymentMethodToServer(PaymentMethod pm) {
+    switch (pm) {
+      case PaymentMethod.COD:
+        return "COD";
+      case PaymentMethod.MOMO:
+        return "MOMO";
+      case PaymentMethod.ZALO_PAY:
+        return "ZALO_PAY";
+      case PaymentMethod.VN_PAY:
+        return "VN_PAY";
+    }
+  }
+
+  /// Điều hướng đến danh sách địa chỉ
   Future<void> _navigateToAddressList() async {
     final result = await Navigator.pushNamed(context, Routes.addressList);
     if (result == true) {
-      // Nếu địa chỉ đã được thay đổi, reload địa chỉ mặc định
+      // Reload lại địa chỉ mặc định
       setState(() {
         _addressFuture = _getDefaultAddress();
       });
     }
   }
 
+  /// Widget chọn phương thức thanh toán
+  Widget _buildPaymentMethodSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Phương thức thanh toán',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          RadioListTile<PaymentMethod>(
+            title: const Text('Thanh toán khi nhận hàng (COD)'),
+            value: PaymentMethod.COD,
+            groupValue: _selectedPaymentMethod,
+            onChanged: (PaymentMethod? value) {
+              if (value != null) {
+                setState(() {
+                  _selectedPaymentMethod = value;
+                });
+              }
+            },
+          ),
+          RadioListTile<PaymentMethod>(
+            title: const Text('Thanh toán bằng Momo'),
+            value: PaymentMethod.MOMO,
+            groupValue: _selectedPaymentMethod,
+            onChanged: (PaymentMethod? value) {
+              if (value != null) {
+                setState(() {
+                  _selectedPaymentMethod = value;
+                });
+              }
+            },
+          ),
+          // Nếu muốn hỗ trợ ZaloPay và VNPay, thêm RadioListTile tương tự bên dưới:
+          RadioListTile<PaymentMethod>(
+              title: const Text('Thanh toán bằng Zalo Pay'),
+              value: PaymentMethod.ZALO_PAY,
+              groupValue: _selectedPaymentMethod,
+              onChanged: (PaymentMethod? value) {
+                if (value != null) {
+                  setState(() {
+                    _selectedPaymentMethod = value;
+                  });
+                }
+              }),
+          RadioListTile<PaymentMethod>(
+              title: const Text('Thanh toán bằng VN Pay'),
+              value: PaymentMethod.VN_PAY,
+              groupValue: _selectedPaymentMethod,
+              onChanged: (PaymentMethod? value) {
+                if (value != null) {
+                  setState(() {
+                    _selectedPaymentMethod = value;
+                  });
+                }
+              }),
+        ],
+      ),
+    );
+  }
+
+  // ================= BUILD UI =================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +241,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Địa chỉ người nhận
+            // ====== Địa chỉ người nhận ======
             FutureBuilder<AddressModel?>(
               future: _addressFuture,
               builder: (context, snapshot) {
@@ -109,10 +260,9 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 }
               },
             ),
-
             const SizedBox(height: 16),
 
-            // Danh sách sản phẩm
+            // ====== Danh sách sản phẩm ======
             const Text(
               'Sản phẩm đã chọn',
               style: TextStyle(
@@ -134,19 +284,15 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                   title: Text(item.product.name),
                   subtitle: Text('Số lượng: ${item.quantity}'),
                   trailing: Text(
-                      '${(item.product.price * item.quantity).toStringAsFixed(0)} VND'),
+                    '${(item.product.price * item.quantity).toStringAsFixed(0)} VND',
+                  ),
                 );
               },
             ),
             const Divider(thickness: 1, height: 32),
 
-            // Các phần khác như Bảo hiểm, Voucher, Lời nhắn cho Shop, Phương thức vận chuyển
-            // Bạn có thể thêm các phần này tương tự như trong CheckoutPage nếu cần
-            // Ví dụ:
-            // _buildInsuranceSection(),
-            // _buildVoucherSection(),
-            // _buildMessageSection(),
-            // _buildShippingMethodSection(),
+            // ====== Radio chọn phương thức thanh toán ======
+            _buildPaymentMethodSection(),
           ],
         ),
       ),
@@ -156,7 +302,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Tổng cộng
+            // ====== Tổng cộng ======
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -178,7 +324,8 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
               ],
             ),
             const SizedBox(height: 16),
-            // Nút xác nhận đặt hàng
+
+            // ====== Nút xác nhận đặt hàng ======
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -206,8 +353,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     );
   }
 
-  // Phần xây dựng các widget con
-
+  // ================= CÁC WIDGET PHỤ =================
   Widget _buildLoadingAddressSection() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -228,10 +374,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
       color: Colors.white,
       child: Row(
         children: [
-          const Icon(
-            Icons.error_outline,
-            color: Colors.red,
-          ),
+          const Icon(Icons.error_outline, color: Colors.red),
           const SizedBox(width: 8),
           const Expanded(
             child: Text(
@@ -258,10 +401,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
       color: Colors.white,
       child: Row(
         children: [
-          const Icon(
-            Icons.location_off,
-            color: Colors.grey,
-          ),
+          const Icon(Icons.location_off, color: Colors.grey),
           const SizedBox(width: 8),
           const Expanded(
             child: Text(
@@ -290,10 +430,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
       color: Colors.white,
       child: Row(
         children: [
-          const Icon(
-            Icons.location_on_outlined,
-            color: Colors.orange,
-          ),
+          const Icon(Icons.location_on_outlined, color: Colors.orange),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -301,16 +438,12 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
               children: [
                 Text(
                   '${address.receiver} - ${address.numberPhone}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   address.address,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(color: Colors.grey),
                 ),
               ],
             ),
