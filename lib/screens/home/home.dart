@@ -23,9 +23,14 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _searchController = TextEditingController();
   bool _isCategoryVisible = false; // Để điều khiển hiển thị danh mục
   bool _isSearching = false;
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   void _toggleSearch() {
     Navigator.pushNamed(context, Routes.productSearch);
   }
+
+
+
+
 
 
   void _showCategoryModal() {
@@ -83,3 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+void main() => runApp(MaterialApp(
+  home: HomeScreen(),
+));
