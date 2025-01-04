@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/routes/routes.dart';
-import 'package:techshop_flutter/screens/Account/GetProfile.dart';
-import 'package:techshop_flutter/screens/chart/chart.dart';
-import 'package:techshop_flutter/screens/detailProduct/DetailProduct.dart';
-import 'package:techshop_flutter/screens/forgotPassword/enterCode.dart';
-import 'package:techshop_flutter/screens/forgotPassword/enterUsername.dart';
 import 'package:techshop_flutter/screens/home/home.dart';
 import 'package:techshop_flutter/screens/login/login.dart';
-import 'package:techshop_flutter/screens/login/signUp.dart';
-import 'package:techshop_flutter/screens/seachProduct/ProductSearch.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,7 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Chart(),
+      home: const HomeScreen(),
       // Sử dụng onGenerateRoute để điều hướng
       onGenerateRoute: Routes.generateRoute,
     );

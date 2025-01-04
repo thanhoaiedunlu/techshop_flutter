@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/CartItemModel.dart';
-import 'package:techshop_flutter/models/CartModel.dart';
+import 'package:techshop_flutter/screens/order/OrderInformation.dart';
 import 'package:techshop_flutter/shared/services/cart/CartService.dart';
 import 'package:techshop_flutter/shared/services/cartItem/CartItemService.dart';
-import 'package:techshop_flutter/shared/ultis/shared_preferences.dart';
+import 'package:techshop_flutter/shared/utils/shared_preferences.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -15,6 +15,7 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   List<CartItemModel> _cartItems = [];
   double _totalPrice = 0;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -30,9 +31,20 @@ class _CartScreenState extends State<CartScreen> {
         setState(() {
           _cartItems = cart.cartItems;
           _calculateTotalPrice();
+          _isLoading = false;
         });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Không thể tải giỏ hàng.')),
+        );
       }
     } else {
+      setState(() {
+        _isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Không tìm thấy thông tin người dùng.')),
       );
@@ -99,8 +111,11 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void _checkout() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Proceeding to checkout...')),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OrderSummaryPage(cartItems: _cartItems),
+      ),
     );
   }
 
@@ -112,7 +127,11 @@ class _CartScreenState extends State<CartScreen> {
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
-      body: _cartItems.isEmpty
+      body: _isLoading
+          ? const Center(
+        child: CircularProgressIndicator(),
+      )
+          : _cartItems.isEmpty
           ? const Center(
         child: Text(
           'Giỏ hàng của bạn đang trống!',

@@ -1,15 +1,17 @@
 import 'dart:convert';
-import 'package:techshop_flutter/models/CustomerModel.dart';
 import 'package:http/http.dart' as http;
+import 'package:techshop_flutter/models/customer/CustomerModel.dart';
 import '../../constant/constants.dart';
 
 class AccountService {
   Future<CustomerModel?> getProfile(int id) async {
     final url = Uri.parse('$baseUrl/api/customer/$id');
-    final response = await http.get(url, headers: {'Content-Type': 'application/json'});
+    final response =
+        await http.get(url, headers: {'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+      final Map<String, dynamic> data =
+          jsonDecode(utf8.decode(response.bodyBytes));
       return CustomerModel.fromJson(data);
     } else {
       return null; // Xử lý lỗi
@@ -46,5 +48,4 @@ class AccountService {
       return false;
     }
   }
-
 }

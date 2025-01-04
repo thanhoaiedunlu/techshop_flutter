@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:techshop_flutter/models/CustomerModel.dart';
+import 'package:techshop_flutter/models/customer/CustomerModel.dart';
 
 class SharedPreferencesHelper {
   // Lưu thông tin người dùng

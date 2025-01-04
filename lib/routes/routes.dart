@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/CategoryModel.dart';
 import 'package:techshop_flutter/screens/Account/GetProfile.dart';
 import 'package:techshop_flutter/screens/account/EditProfile.dart';
+import 'package:techshop_flutter/screens/address/Address.dart';
 import 'package:techshop_flutter/screens/cart/Cart.dart';
 import 'package:techshop_flutter/screens/detailProduct/DetailProduct.dart';
 import 'package:techshop_flutter/screens/home/home.dart';
 import 'package:techshop_flutter/screens/login/login.dart';
+import 'package:techshop_flutter/screens/order/OrderInformation.dart';
 import 'package:techshop_flutter/screens/productCategory/ProductCategory.dart';
 import 'package:techshop_flutter/screens/seachProduct/ProductSearch.dart';
+
+import '../models/CartItemModel.dart';
 
 class Routes {
   static const String home = '/';
@@ -20,13 +24,15 @@ class Routes {
   static const String productDetail = '/productDetail';
   static const String cart = '/cart';
   static const String productCategory = '/productCategory';
+  static const String checkout = '/checkout';
+  static const String addressList = '/addressList';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case receipt:
-      // Placeholder for receipt screen
+        // Placeholder for receipt screen
         return _errorRoute();
       case account:
         if (settings.arguments is int) {
@@ -69,6 +75,16 @@ class Routes {
           );
         }
         return _errorRoute(); // Nếu arguments không đúng kiểu
+      case checkout:
+        if (settings.arguments is List<CartItemModel>) {
+          final cartItems = settings.arguments as List<CartItemModel>;
+          return MaterialPageRoute(
+            builder: (_) => OrderSummaryPage(cartItems: cartItems),
+          );
+        }
+        return _errorRoute(); // Nếu arguments không đúng kiểu
+      case addressList:
+        return MaterialPageRoute(builder: (_) => const AddressListPage());
       default:
         return _errorRoute(); // Trường hợp không tìm thấy route
     }

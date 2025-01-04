@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:techshop_flutter/models/CustomerModel.dart';
+import 'package:techshop_flutter/models/customer/CustomerModel.dart';
 import 'package:techshop_flutter/shared/constant/constants.dart';
 
 

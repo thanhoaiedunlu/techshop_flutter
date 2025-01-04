@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../routes/routes.dart';
-import '../../ultis/shared_preferences.dart';
+import '../../utils/shared_preferences.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex; // Tab hiện tại
@@ -23,13 +23,13 @@ class _CustomBottomNavigationBarState
     // Dẫn đến các màn hình tương ứng khi bấm vào các tab
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushNamed(context, '/');
         break;
       case 1:
         Navigator.pushNamed(context, '/receipt');
         break;
       case 2:
-        Navigator.pushNamed(context, '/cart');
+        Navigator.pushNamed(context, Routes.cart);
         break;
       case 3:
         final userId = await SharedPreferencesHelper.getUserId();

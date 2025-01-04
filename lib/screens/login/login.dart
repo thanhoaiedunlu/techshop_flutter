@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:techshop_flutter/models/CustomerModel.dart';
+import 'package:techshop_flutter/models/customer/CustomerModel.dart';
 import 'package:techshop_flutter/routes/routes.dart';
-import 'package:techshop_flutter/screens/home/home.dart';
 import 'package:techshop_flutter/screens/login/signUp.dart';
 import 'package:techshop_flutter/shared/services/customer/customerService.dart';
-import '../../shared/ultis/shared_preferences.dart';
+import '../../shared/utils/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -158,8 +157,8 @@ class _LoginState extends State<Login> {
       // Đợi một khoảng thời gian để SnackBar hiển thị xong
       Future.delayed(const Duration(seconds: 2), () {
         // Điều hướng đến màn hình Home
-        Navigator.pushNamed(context, Routes.home);
       });
+      Navigator.pushReplacementNamed(context, Routes.home);
     } else {
       // Nếu không có customer, bạn có thể hiển thị lỗi hoặc thực hiện hành động khác.
       ScaffoldMessenger.of(context).showSnackBar(

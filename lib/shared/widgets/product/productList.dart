@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/ProductModel.dart';
 import 'package:techshop_flutter/routes/routes.dart';
 import 'package:techshop_flutter/shared/services/cartItem/CartItemService.dart';
-import 'package:techshop_flutter/shared/ultis/shared_preferences.dart';
+import 'package:techshop_flutter/shared/utils/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ProductListView extends StatelessWidget {
