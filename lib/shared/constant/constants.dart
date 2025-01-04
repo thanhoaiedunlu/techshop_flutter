@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const String baseUrl = "http://192.168.1.4:8080";
+const String baseUrl = "http://192.168.59.1:8080";
 class AppColors {
   static const Color primaryColor = Color(0xFFE6F7FF); // Màu cam chính (Shopee)
   static const Color backgroundLightColor = Color(0xFFBCB1BC); // Nền nhạt

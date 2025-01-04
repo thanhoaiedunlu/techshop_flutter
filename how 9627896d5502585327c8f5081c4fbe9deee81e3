@@ -1,0 +1,95 @@
+[33mcommit 9627896d5502585327c8f5081c4fbe9dedee81e3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mDungzz[m[33m, [m[1;31morigin/develop[m[33m, [m[1;31morigin/Dungzz[m[33m)[m
+Merge: a15562e e85d7cc
+Author: PhamThiNgocHoa <127472698+PhamThiNgocHoa@users.noreply.github.com>
+Date:   Thu Dec 19 17:06:54 2024 +0700
+
+    Merge pull request #6 from thanhoaiedunlu/hoa
+    
+    feat: complete ui and call api enterCode, resetPassword
+
+[33mcommit e85d7ccc4b336d18bebe9fec83e55c925a07b7f6[m[33m ([m[1;31morigin/hoa[m[33m)[m
+Author: gld-hoapham <hoapham@golivedev.com>
+Date:   Tue Dec 17 21:59:56 2024 +0700
+
+    feat: complete ui and call api enterCode, resetPassword
+
+[33mcommit a15562eb2d4dc175d02d7e119ae86cb5f3a80b57[m
+Merge: c91130c 0aa8eac
+Author: huydoan0212 <144919777+huydoan0212@users.noreply.github.com>
+Date:   Sun Dec 15 15:18:23 2024 +0700
+
+    Merge pull request #5 from thanhoaiedunlu/setup
+    
+    home page
+
+[33mcommit 0aa8eac41238aa547e58b1924786b1a308aba8f7[m[33m ([m[1;31morigin/setup[m[33m)[m
+Author: huydoan0212 <21130374@st.hcmuaf.edu.vn>
+Date:   Sun Dec 15 15:16:41 2024 +0700
+
+    home page
+
+[33mcommit c91130c192533e4a5d6bf8ea9085cba2c862c713[m
+Merge: a9782f3 e661e30
+Author: huydoan0212 <144919777+huydoan0212@users.noreply.github.com>
+Date:   Sun Dec 15 10:50:06 2024 +0700
+
+    Merge pull request #4 from thanhoaiedunlu/setup
+    
+    setup project
+
+[33mcommit e661e3030db639d0c950775f67ee10afcbad5236[m
+Author: huydoan0212 <21130374@st.hcmuaf.edu.vn>
+Date:   Sun Dec 15 10:26:42 2024 +0700
+
+    setup project
+
+[33mcommit a9782f380f321668986724876626e402f9594d02[m
+Merge: 0eeedff 9671787
+Author: Thanh Hoai Nguyen <144103238+thanhoaiedunlu@users.noreply.github.com>
+Date:   Sun Dec 15 09:53:59 2024 +0700
+
+    Merge pull request #3 from thanhoaiedunlu/Thanh_Hoai
+    
+    save customer
+
+[33mcommit 9671787099306fc764ee04dc40ce26bcb5fbc831[m
+Author: thanhoaiedunlu <21130360@st.hcmuaf.edu.vn>
+Date:   Sun Dec 8 16:20:31 2024 +0700
+
+    save custome
+
+[33mcommit 0eeedffa9515e666e6e703463eff017a6de3c32e[m
+Merge: 491d404 c742097
+Author: Thanh Hoai Nguyen <144103238+thanhoaiedunlu@users.noreply.github.com>
+Date:   Sun Dec 8 14:29:54 2024 +0700
+
+    Merge pull request #2 from thanhoaiedunlu/Thanh_Hoai
+    
+    login
+
+[33mcommit c7420979c5fdd20d88ae4dfa8c1dcd2e82f5edcf[m
+Author: thanhoaiedunlu <21130360@st.hcmuaf.edu.vn>
+Date:   Sun Dec 8 14:28:11 2024 +0700
+
+    login
+
+[33mcommit 491d40437d6ac53325c2a39425d84950cdf2fedf[m
+Merge: 80554e1 71838fb
+Author: Thanh Hoai Nguyen <144103238+thanhoaiedunlu@users.noreply.github.com>
+Date:   Sun Dec 8 14:26:39 2024 +0700
+
+    Merge pull request #1 from thanhoaiedunlu/Thanh_Hoai
+    
+    sign up
+
+[33mcommit 71838fbe3bfad5133154b933fc4e1421ebb6869a[m
+Author: thanhoaiedunlu <21130360@st.hcmuaf.edu.vn>
+Date:   Sun Dec 8 13:13:53 2024 +0700
+
+    sign up
+
+[33mcommit 80554e1917807c39fe422cf56803e6945bd21066[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/hieu[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: thanhoaiedunlu <21130360@st.hcmuaf.edu.vn>
+Date:   Sun Dec 8 10:17:30 2024 +0700
+
+    Initial commit
