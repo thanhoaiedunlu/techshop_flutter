@@ -175,10 +175,12 @@ class _AdminOrderManagementState extends State<AdminOrderManagement>
                     ],
                   ),
                   DropdownButton<String>(
-                    value: ['Đang giao', 'Đã giao', 'Đã hủy'].contains(status)
+                    value: ['Đang xử lý','Đang giao', 'Đã giao', 'Đã hủy'].contains(status)
                         ? status
                         : 'Đang giao',
                     items: [
+                      DropdownMenuItem(value: 'Đang xử lý', child: Text('Đang xử lý')),
+
                       DropdownMenuItem(value: 'Đang giao', child: Text('Đang giao')),
                       DropdownMenuItem(value: 'Đã giao', child: Text('Đã giao')),
                       DropdownMenuItem(value: 'Đã hủy', child: Text('Đã hủy')),

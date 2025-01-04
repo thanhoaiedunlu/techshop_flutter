@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../models/OrderModel.dart';
 import '../../shared/services/order/OrderService.dart';
 import '../../shared/constant/constants.dart';
-import 'orderDetail.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   @override
@@ -38,7 +37,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
       case 'Đang giao':
         return AppColors.statusDelivered;
       case 'Đã giao':
-        return AppColors.statusDelivered;
+        return AppColors.statusAlDelivered;
       case 'Đã hủy':
         return AppColors.statusCancelled;
       default:
@@ -67,18 +66,15 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
           isScrollable: true,
           labelColor: Colors.black,
           unselectedLabelColor: Colors.grey,
-          labelPadding: EdgeInsets.only(left: 0, right: 35), // Điều chỉnh padding giữa các tab
-
+          labelPadding: const EdgeInsets.only(left: 0, right: 35), // Điều chỉnh padding giữa các tab
           indicatorColor: AppColors.primaryColor,
-          tabs: [
-              Tab(text: 'Tất cả'),
-
+          tabs: const [
+            Tab(text: 'Tất cả'),
             Tab(text: 'Đang xử lý'),
             Tab(text: 'Đang giao'),
             Tab(text: 'Đã giao'),
             Tab(text: 'Đã hủy'),
           ],
-
         ),
       ),
       backgroundColor: AppColors.backgroundLightColor,
@@ -115,7 +111,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
         : orders.where((order) => order.status == statusFilter).toList();
 
     if (filteredOrders.isEmpty) {
-      return Center(child: Text('Không có đơn hàng nào'));
+      return const Center(child: Text('Không có đơn hàng nào'));
     }
 
     return ListView.builder(
@@ -130,9 +126,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
           color: Colors.white,
           margin: const EdgeInsets.symmetric(vertical: 10),
           child: ListTile(
-
             leading: Image.network(
-              order.orderDetails.first.productResponseDTO.img, // Truy cập vào `img` từ `ProductModel`
+              order.orderDetails.first.productResponseDTO.img,
               width: 70,
               height: 100,
               fit: BoxFit.cover,
@@ -143,7 +138,6 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
               orderName,
               style: const TextStyle(
                   fontWeight: FontWeight.bold, color: Colors.black),
-
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -159,11 +153,10 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
               ),
             ),
             onTap: () {
-              Navigator.push(
+              Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => OrderDetailScreen(order: order),
-                ),
+                '/orderDetail', // Sử dụng route name
+                arguments: order, // Truyền đối tượng `OrderModel` qua `arguments`
               );
             },
           ),
