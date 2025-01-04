@@ -174,6 +174,28 @@ class _GetProfileState extends State<GetProfile> {
                 style: TextStyle(fontSize: 18, color: Colors.white),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0), // Khoảng cách phía trên
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  minimumSize: const Size(double.infinity, 10),
+                ),
+                onPressed: () async {
+                  await SharedPreferencesHelper.clearUserData();
+                  Navigator.pushReplacementNamed(context, Routes.login);
+                },
+                icon: const Icon(Icons.logout, color: Colors.white),
+                label: const Text(
+                  'Đăng xuất',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ),
           ],
         ),
       ),
