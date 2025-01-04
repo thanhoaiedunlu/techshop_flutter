@@ -156,11 +156,8 @@ class _LoginState extends State<Login> {
         SnackBar(content: Text('Welcome, ${savedCustomer?.fullname}!')),
       );
       // Đợi một khoảng thời gian để SnackBar hiển thị xong
-      Future.delayed(const Duration(seconds: 2), () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+      Future.delayed(const Duration(seconds: 1), () {
+        Navigator.pushReplacementNamed(context, Routes.home);
       });
     } else {
       // Nếu không có customer, bạn có thể hiển thị lỗi hoặc thực hiện hành động khác.
