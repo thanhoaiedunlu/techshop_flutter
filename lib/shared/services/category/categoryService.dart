@@ -9,6 +9,7 @@ class CategoryService {
   Future<List<CategoryModel>> getCategories() async {
     const uri = '$baseUrl/api/category/list'; // Đường dẫn API
     final url = Uri.parse(uri);
+    print(url);
     final headers = {
       'Content-Type': 'application/json', // Định dạng body là JSON
     };

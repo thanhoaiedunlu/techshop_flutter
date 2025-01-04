@@ -28,4 +28,22 @@ class SharedPreferencesHelper {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.containsKey('user_data');
   }
+  static Future<int?> getUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJson = prefs.getString('user_data');
+    if (userJson != null) {
+      final customer = CustomerModel.fromMap(json.decode(userJson));
+      return customer.id;
+    }
+    return null;
+  }
+  static Future<int?> getCartIdByUserLogin() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJson = prefs.getString('user_data');
+    if (userJson != null) {
+      final customer = CustomerModel.fromMap(json.decode(userJson));
+      return customer.cartId;
+    }
+    return null;
+  }
 }
