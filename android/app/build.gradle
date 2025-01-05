@@ -1,3 +1,16 @@
+// Tệp build.gradle được sửa
+buildscript {
+    ext.kotlin_version = '1.8.0' // Cập nhật phiên bản Kotlin
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.1' // Đảm bảo phiên bản AGP tương thích
+        classpath 'com.google.gms:google-services:4.4.2' // Đảm bảo plugin Google Services
+    }
+}
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
@@ -7,12 +20,13 @@ plugins {
 
 android {
     namespace = "com.example.techshop_flutter"
-    compileSdk = flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled = true // Kích hoạt core library desugaring
     }
 
     kotlinOptions {
@@ -30,6 +44,15 @@ android {
         versionName = flutter.versionName
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -42,3 +65,35 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2' // Hỗ trợ các thư viện JDK cũ
+
+    // Import Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:33.7.0')
+
+    // Firebase dependencies
+    implementation 'com.google.firebase:firebase-analytics'
+
+    implementation 'com.facebook.android:facebook-android-sdk:16.1.2'
+
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.14")
+    implementation fileTree(dir: "D:\\Study\\techshop_flutter\\zalopayLib", include: ["*.aar", "*.jar"])
+
+    // Thêm các thư viện Firebase khác nếu cần
+    // https://firebase.google.com/docs/android/setup#available-libraries
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://maven.google.com' }
+        maven { url 'https://maven.facebook.com/facebook' }
+    }
+}
+
+// Áp dụng plugin Google Services
+apply plugin: 'com.google.gms.google-services'
+
