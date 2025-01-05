@@ -172,12 +172,14 @@ class _LoginState extends State<Login> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Welcome, ${savedCustomer?.fullname}!')),
       );
+
       Future.delayed(const Duration(seconds: 1), () {
         if (customer.role) {
           Navigator.pushReplacementNamed(context, Routes.adminPage);
         } else {
           Navigator.pushReplacementNamed(context, Routes.home);
         }
+
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
