@@ -16,10 +16,10 @@ class CreateAddressDto {
   Map<String, dynamic> toMap() {
     return {
       'address': address,
-      'number_phone': numberPhone,
+      'numberPhone': numberPhone,
       'receiver': receiver,
       'note': note,
-      'customer_id': customerId,
+      'customerId': customerId,
     };
   }
 }

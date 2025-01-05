@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:techshop_flutter/models/CartItemModel.dart';
 import 'package:techshop_flutter/models/address/AddressModel.dart';
 import 'package:techshop_flutter/models/order/OrderRequestDto.dart';
 import 'package:techshop_flutter/routes/routes.dart';
+import 'package:techshop_flutter/screens/order/paymentFailure.dart';
+import 'package:techshop_flutter/screens/order/paymentSuccess.dart';
 import 'package:techshop_flutter/shared/constant/constants.dart';
 import 'package:techshop_flutter/shared/helper/BottomNavHelper.dart';
 import 'package:techshop_flutter/shared/helper/zalopay/PaymentTest.dart';
@@ -11,6 +14,8 @@ import 'package:techshop_flutter/shared/services/address/AddressService.dart';
 import 'package:techshop_flutter/shared/services/cartItem/CartItemService.dart';
 import 'package:techshop_flutter/shared/services/order/OrderService.dart';
 import 'package:techshop_flutter/shared/utils/shared_preferences.dart';
+
+import '../address/AddressManagement.dart';
 
 // Enum mở rộng 4 phương thức, nhưng ví dụ này chỉ gắn radio cho COD, MOMO.
 
@@ -50,6 +55,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
       (total, item) => total + (item.product.price * item.quantity),
     );
   }
+
 
   String convertPaymentMethodToString(PaymentMethod pm) {
     switch (pm) {
@@ -111,35 +117,51 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
 
       final methodString = _mapPaymentMethodToServer(_selectedPaymentMethod);
       final statusString =
-          methodString == "COD" ? "PENDING" : "PENDING_PAYMENT";
+          methodString == "COD" ? "PENDING" : "PENDING";
 
-      final orderId = await OrderService.saveOrder(
-        methodString,
-        statusString,
-        dto,
-      );
+
       setState(() => _isSubmitting = false);
 
-      if (orderId != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đặt hàng thành công! Mã đơn: $orderId')),
-        );
         if (methodString == "COD") {
           print("cod");
+          final orderId = await OrderService.saveOrder(
+            methodString,
+            statusString,
+            dto,
+          );
+          var bool = await CartItemService.deleteCartItemByCartId(cartId!);
+          BottomNavHelper.reloadCartBadge();
           Navigator.pushReplacementNamed(context, Routes.home);
         } else {
           // Thanh toán qua ZaloPay
           print("zalopay");
           try {
             String result =
-                await ZaloPayService.handlePayment(context, "1000000");
+                await ZaloPayService.handlePayment(context, dto.totalAmount.toString());
             if (result == "successed") {
               print("home");
-              Navigator.pushReplacementNamed(context, Routes.home);
+              final orderId = await OrderService.saveOrder(
+                methodString,
+                statusString,
+                dto,
+              );
+              var bool = await CartItemService.deleteCartItemByCartId(cartId!);
+              BottomNavHelper.reloadCartBadge();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PaymentSuccessScreen(),
+                  ));
             } else if (result == "canceled") {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Thanh toán đã bị hủy.")),
+
               );
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PaymentFailureScreen(),
+                  ));
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("Lỗi thanh toán: $result")),
@@ -151,10 +173,9 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
             );
           }
         }
-      }
 
-      var bool = await CartItemService.deleteCartItemByCartId(cartId!);
-      BottomNavHelper.reloadCartBadge();
+
+
     } catch (e) {
       print('Exception in _confirmOrder: $e');
       setState(() => _isSubmitting = false);
@@ -312,7 +333,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                   title: Text(item.product.name),
                   subtitle: Text('Số lượng: ${item.quantity}'),
                   trailing: Text(
-                    '${(item.product.price * item.quantity).toStringAsFixed(0)} VND',
+                    '${NumberFormat.currency(locale: 'vi', symbol: '₫').format((item.product.price * item.quantity))} ',
                   ),
                 );
               },
@@ -342,7 +363,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                   ),
                 ),
                 Text(
-                  '${totalPrice.toStringAsFixed(0)} VND',
+                  '${NumberFormat.currency(locale: 'vi', symbol: '₫').format(totalPrice)} ',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -397,6 +418,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
   }
 
   Widget _buildErrorAddressSection() {
+
     return Container(
       padding: const EdgeInsets.all(16),
       color: Colors.white,
@@ -418,6 +440,29 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
               });
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.warning, color: Colors.orange), // Icon dấu chấm than
+            onPressed: () async {
+              // Lấy customerId từ SharedPreferences
+              final customerId = await SharedPreferencesHelper.getUserId();
+
+              if (customerId != null) {
+                // Nếu lấy được customerId, chuyển đến trang Quản lý địa chỉ
+                Navigator.pushNamed(
+                  context,
+                  Routes.address, // Route tới màn hình quản lý địa chỉ
+                  arguments: customerId, // Truyền ID khách hàng
+                );
+              } else {
+                // Xử lý trường hợp không lấy được customerId
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Không tìm thấy ID khách hàng. Vui lòng đăng nhập lại.'),
+                  ),
+                );
+              }
+            },
+          )
         ],
       ),
     );

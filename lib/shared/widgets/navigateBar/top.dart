@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../screens/qr/QRCodeScanner.dart';
+
 class CustomTopNavigationBar extends StatelessWidget
     implements PreferredSizeWidget {
   final bool isSearching;
@@ -42,8 +44,16 @@ class CustomTopNavigationBar extends StatelessWidget
         ),
         IconButton(
           icon: const Icon(Icons.qr_code_scanner),
-          onPressed: onSearchPressed,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => QRViewExample(), // Chuyển đến màn hình QR
+              ),
+            );
+          },
         ),
+
       ],
     );
   }

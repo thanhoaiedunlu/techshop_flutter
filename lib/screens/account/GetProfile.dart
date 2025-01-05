@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techshop_flutter/shared/services/customer/customerService.dart';
 
 import '../../models/customer/CustomerModel.dart';
 import '../../routes/routes.dart';
@@ -7,8 +8,8 @@ import '../../shared/utils/shared_preferences.dart';
 
 class GetProfile extends StatefulWidget {
   final int id; // Nhận ID từ màn hình khác
-
   const GetProfile({super.key, required this.id});
+
 
   @override
   State<GetProfile> createState() => _GetProfileState();
@@ -145,78 +146,98 @@ class _GetProfileState extends State<GetProfile> {
                         ),
                       ),
                       const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
                         children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    minimumSize: const Size(double.infinity, 10),
+                                  ),
+                                  onPressed: () async {
+                                    final userId = await SharedPreferencesHelper.getUserId();
+                                    if (userId != null) {
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.editAccount,
+                                        arguments: userId,
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'Please log in to view your account.')),
+                                      );
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Cập nhật tài khoản',
+                                    style: TextStyle(fontSize: 18, color: Colors.white),
+                                  ),
                                 ),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                minimumSize: const Size(double.infinity, 10),
                               ),
-                              onPressed: () async {
-                                final userId =
-                                    await SharedPreferencesHelper.getUserId();
-                                if (userId != null) {
-                                  Navigator.pushNamed(
-                                    context,
-                                    Routes.editAccount,
-                                    arguments: userId,
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'Please log in to view your account.')),
-                                  );
-                                }
-                              },
-                              child: const Text(
-                                'Cập nhật tài khoản',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.white),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    minimumSize: const Size(double.infinity, 10),
+                                  ),
+                                  onPressed: () async {
+                                    final userId = await SharedPreferencesHelper.getUserId();
+                                    if (userId != null) {
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.updatePassword,
+                                        arguments: userId,
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'Please log in to view your account.')),
+                                      );
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Cập nhật mật khẩu',
+                                    style: TextStyle(fontSize: 18, color: Colors.white),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                minimumSize: const Size(double.infinity, 10),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              onPressed: () async {
-                                final userId =
-                                    await SharedPreferencesHelper.getUserId();
-                                if (userId != null) {
-                                  Navigator.pushNamed(
-                                    context,
-                                    Routes.updatePassword,
-                                    arguments: userId,
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'Please log in to view your account.')),
-                                  );
-                                }
-                              },
-                              child: const Text(
-                                'Cập nhật mật khẩu',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.white),
-                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              minimumSize: const Size(double.infinity, 10),
+                            ),
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.address, // Route tới màn hình quản lý địa chỉ
+                                arguments: widget.id, // Truyền ID khách hàng
+                              );
+                            },
+                            child: const Text(
+                              'Quản lý địa chỉ',
+                              style: TextStyle(fontSize: 18, color: Colors.white),
                             ),
                           ),
                         ],
@@ -234,6 +255,7 @@ class _GetProfileState extends State<GetProfile> {
                             minimumSize: const Size(double.infinity, 10),
                           ),
                           onPressed: () async {
+
                             Navigator.pushNamedAndRemoveUntil(
                               context,
                               Routes.login,
@@ -250,53 +272,53 @@ class _GetProfileState extends State<GetProfile> {
                     ],
                   ),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                minimumSize: const Size(double.infinity, 10),
-              ),
-              onPressed: () async {
-                final userId = await SharedPreferencesHelper.getUserId();
-                if (userId != null) {
-                  Navigator.pushNamed(
-                    context,
-                    Routes.editAccount,
-                    arguments: userId,
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please log in to view your account.')),
-                  );
-                }
-              },
-              child: const Text(
-                'Cập nhật tài khoản',
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0), // Khoảng cách phía trên
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  minimumSize: const Size(double.infinity, 10),
-                ),
-                onPressed: () async {
-                  await SharedPreferencesHelper.clearUserData();
-                  Navigator.pushReplacementNamed(context, Routes.login);
-                },
-                icon: const Icon(Icons.logout, color: Colors.white),
-                label: const Text(
-                  'Đăng xuất',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+              //   padding: const EdgeInsets.symmetric(vertical: 10),
+              //   minimumSize: const Size(double.infinity, 10),
+              // ),
+    //           onPressed: () async {
+    //             final userId = await SharedPreferencesHelper.getUserId();
+    //             if (userId != null) {
+    //               Navigator.pushNamed(
+    //                 context,
+    //                 Routes.editAccount,
+    //                 arguments: userId,
+    //               );
+    //             } else {
+    //               ScaffoldMessenger.of(context).showSnackBar(
+    //                 const SnackBar(content: Text('Please log in to view your account.')),
+    //               );
+    //             }
+    //           },
+    //           child: const Text(
+    //             'Cập nhật tài khoản',
+    //             style: TextStyle(fontSize: 18, color: Colors.white),
+    //           ),
+    //         ),
+    //         Padding(
+    //           padding: const EdgeInsets.only(top: 10.0), // Khoảng cách phía trên
+    //           child: ElevatedButton.icon(
+    //             style: ElevatedButton.styleFrom(
+    //               backgroundColor: Colors.red,
+    //               shape: RoundedRectangleBorder(
+    //                 borderRadius: BorderRadius.circular(12),
+    //               ),
+    //               padding: const EdgeInsets.symmetric(vertical: 10),
+    //               minimumSize: const Size(double.infinity, 10),
+    //             ),
+    //             onPressed: () async {
+    //               await SharedPreferencesHelper.clearUserData();
+    //               Navigator.pushReplacementNamed(context, Routes.login);
+    //             },
+    //             icon: const Icon(Icons.logout, color: Colors.white),
+    //             label: const Text(
+    //               'Đăng xuất',
+    //               style: TextStyle(fontSize: 18, color: Colors.white),
+    //             ),
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
     );
   }
 }

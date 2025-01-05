@@ -6,8 +6,8 @@ import '../../constant/constants.dart';
 
 class OrderService {
   // Hàm lấy danh sách đơn hàng
-  Future<List<OrderModel>> getOrders() async {
-    final String url = '$baseUrl/api/order/list'; // Endpoint API
+  Future<List<OrderModel>> getOrders(int id) async {
+    final String url = '$baseUrl/api/order/customer/${id}'; // Endpoint API
     final Uri uri = Uri.parse(url);
     print(url);
     try {
@@ -18,8 +18,11 @@ class OrderService {
 
       // Kiểm tra mã trạng thái phản hồi
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        // Chuyển đổi dữ liệu JSON thành danh sách OrderModel
+
+        final decodedResponse = utf8.decode(response.bodyBytes);
+        final List<dynamic> data = json.decode(decodedResponse);
+
+        // Ánh xạ JSON thành danh sách OrderModel
         return data.map((json) => OrderModel.fromJson(json)).toList();
       } else {
         throw Exception(
@@ -94,6 +97,29 @@ class OrderService {
     } catch (e) {
       print('Error fetching orders: $e');
       return [];
+    }
+  }
+  Future<String> updateOrderStatus(String status, int orderId) async {
+    final String url = '$baseUrl/api/order/status/$status&&$orderId'; // Endpoint API
+    final Uri uri = Uri.parse(url);
+
+    try {
+      // Gửi yêu cầu PUT
+      final response = await http.put(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      // Kiểm tra mã trạng thái phản hồi
+      if (response.statusCode == 200) {
+        return "Cập nhật trạng thái thành công!";
+      } else {
+        throw Exception(
+            'Failed to update order status. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error updating order status: $e');
+      return "Lỗi: $e";
     }
   }
 }

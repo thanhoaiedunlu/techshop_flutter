@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:techshop_flutter/models/CartItemModel.dart';
 import 'package:techshop_flutter/screens/order/OrderInformation.dart';
 import 'package:techshop_flutter/shared/services/cart/CartService.dart';
@@ -19,6 +20,7 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   void initState() {
+
     super.initState();
     _loadCart();
   }
@@ -172,7 +174,7 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ),
                               Text(
-                                'Giá: ${item.product.price} VND',
+                                'Giá: ${NumberFormat.currency(locale: 'vi', symbol: '₫').format(item.product.price)} ',
                               ),
                             ],
                           ),
@@ -217,7 +219,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
                     Text(
-                      '${_totalPrice.toStringAsFixed(0)} VND',
+                      ' ${NumberFormat.currency(locale: 'vi', symbol: '₫').format(_totalPrice)} ',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

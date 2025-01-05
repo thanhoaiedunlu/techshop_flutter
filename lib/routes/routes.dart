@@ -6,6 +6,7 @@ import 'package:techshop_flutter/screens/Account/GetProfile.dart';
 import 'package:techshop_flutter/screens/account/EditProfile.dart';
 import 'package:techshop_flutter/screens/account/UpdatePassword.dart';
 import 'package:techshop_flutter/screens/address/Address.dart';
+import 'package:techshop_flutter/screens/address/AddressManagement.dart';
 import 'package:techshop_flutter/screens/admin/AdminDashboard.dart';
 import 'package:techshop_flutter/screens/cart/Cart.dart';
 import 'package:techshop_flutter/screens/detailProduct/DetailProduct.dart';
@@ -35,7 +36,7 @@ class Routes {
   static const String orderHistoryDetail = '/orderHistoryDetail';
   static const String adminPage = '/adminPage';
   static const String  updatePassword= '/updatePassword';
-
+  static const String address = '/adresss';
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case home:
@@ -95,10 +96,14 @@ class Routes {
       case addressList:
         return MaterialPageRoute(builder: (_) => const AddressListPage());
       case orderHistoryClient:
-        // Màn hình lịch sử đơn hàng
-        return MaterialPageRoute(
-          builder: (_) => OrderHistoryScreen(),
-        );
+        if (settings.arguments is int) {
+          final args = settings.arguments as int; // Nhận productId từ arguments
+          return MaterialPageRoute(
+            builder: (_) => OrderHistoryScreen(customerId: args),
+          );
+        }
+        return MaterialPageRoute(builder: (_) => const AddressListPage());
+
       case adminPage:
         // Placeholder for admin page
         return MaterialPageRoute(
@@ -119,6 +124,14 @@ class Routes {
           final customerId = settings.arguments as int;
           return MaterialPageRoute(
             builder: (_) => UpdatePassword(customerId: customerId),
+          );
+        }
+        return _errorRoute();
+      case address:
+        if (settings.arguments is int) {
+          final customerId = settings.arguments as int;
+          return MaterialPageRoute(
+            builder: (_) => AddressManagementScreen(customerId: customerId),
           );
         }
         return _errorRoute(); // Nếu arguments không đúng kiểu  // Nếu arguments không đúng kiểu/ Nếu arguments không đúng kiểu

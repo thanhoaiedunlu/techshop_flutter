@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/screens/admin/order/adminOrderManagement.dart';
 import 'package:techshop_flutter/screens/admin/productManagement/ProductManagement.dart';
+import 'package:techshop_flutter/screens/chart/chart.dart';
 
+import '../../routes/routes.dart';
 import 'category/CategoryManagement.dart';
 import 'customer/CustomerManagement.dart';
 
@@ -100,7 +102,7 @@ class AdminDashboard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => CategoryManagementScreen()),
+                  builder: (context) => Chart()),
             );
             break;
           case 'Khách Hàng':
@@ -132,10 +134,10 @@ class AdminDashboard extends StatelessWidget {
             );
             break;
           case 'Đăng Xuất':
-            Navigator.push(
+            Navigator.pushNamedAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                  builder: (context) => CategoryManagementScreen()),
+              Routes.login,
+                  (route) => false,
             );
             break;
           default:

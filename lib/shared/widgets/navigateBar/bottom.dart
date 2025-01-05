@@ -54,10 +54,12 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   Future<void> _onTabTapped(int index) async {
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/');
+        Navigator.pushNamed(context, Routes.home);
         break;
       case 1:
-        Navigator.pushNamed(context, Routes.orderHistoryClient);
+        final userId = await SharedPreferencesHelper.getUserId();
+        Navigator.pushNamed(context, Routes.orderHistoryClient,arguments: userId,
+        );
         break;
       case 2:
         Navigator.pushNamed(context, Routes.cart);

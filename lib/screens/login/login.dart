@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:techshop_flutter/models/customer/CustomerModel.dart';
 import 'package:techshop_flutter/routes/routes.dart';
 import 'package:techshop_flutter/screens/forgotPassword/enterUsername.dart';
 import 'package:techshop_flutter/screens/login/signUp.dart';
 import 'package:techshop_flutter/shared/services/customer/customerService.dart';
+import '../../shared/constant/constants.dart';
 import '../../shared/utils/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -22,6 +26,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(
           'Đăng Nhập',
@@ -94,6 +99,95 @@ class _LoginState extends State<Login> {
                 ),
                 child: const Text('Đăng Nhập'),
               ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final customer = await customerServices.loginWithGoogle();
+
+                      if (customer != null) {
+                        await SharedPreferencesHelper.saveUserData(customer);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Welcome, ${customer.fullname}!')),
+                        );
+
+                        Future.delayed(const Duration(seconds: 1), () {
+                          if (customer.role) {
+                            Navigator.pushReplacementNamed(context, Routes.adminPage);
+                          } else {
+                            Navigator.pushReplacementNamed(context, Routes.home);
+                          }
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Đăng nhập Google thất bại.')),
+                        );
+                      }
+                    },
+                    icon: Image.network(
+                      'https://images.squarespace-cdn.com/content/v1/5b1590a93c3a53e49c6d280d/1528490305937-PKLYPXTEPO7RB0DSEOBJ/google-plus-social-media-management.jpg',
+                      height: 24,
+                      width: 24,
+                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                    ),
+                    label: const Text('Đăng nhập bằng Google'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final customer = await customerServices.loginWithFacebook();
+
+                      if (customer != null) {
+                        await SharedPreferencesHelper.saveUserData(customer);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Welcome, ${customer.fullname}!')),
+                        );
+
+                        Future.delayed(const Duration(seconds: 1), () {
+                          if (customer.role) {
+                            Navigator.pushReplacementNamed(context, Routes.adminPage);
+                          } else {
+                            Navigator.pushReplacementNamed(context, Routes.home);
+                          }
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Đăng nhập Facebook thất bại.')),
+                        );
+                      }
+                    },
+                    icon: Image.network(
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-lBS5KCmOn8JZFW3cgQocYCaheksYP5hGQw&s',
+                      height: 24,
+                      width: 24,
+                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                    ),
+                    label: const Text('Đăng nhập bằng Facebook'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF3b5998), // Màu xanh của Facebook
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
               Column(
                 children: [
                   const Padding(
@@ -187,4 +281,5 @@ class _LoginState extends State<Login> {
       );
     }
   }
+
 }

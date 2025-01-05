@@ -21,6 +21,7 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(
           'Đăng ký',
@@ -32,7 +33,7 @@ class _SignupState extends State<Signup> {
         centerTitle: true,
       ),
       backgroundColor: Colors.white,
-      body: Padding(
+      body:  Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey, // Use a Form widget for validation

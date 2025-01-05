@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:techshop_flutter/models/ProductModel.dart';
 import 'package:techshop_flutter/routes/routes.dart';
 import 'package:techshop_flutter/shared/helper/BottomNavHelper.dart';
@@ -31,7 +32,7 @@ class ProductListView extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text('${product.price} VND'),
+            subtitle: Text('${NumberFormat.currency(locale: 'vi', symbol: '₫').format(product.price)} '),
             trailing: IconButton(
               icon: const Icon(Icons.add_shopping_cart),
               onPressed: () async {

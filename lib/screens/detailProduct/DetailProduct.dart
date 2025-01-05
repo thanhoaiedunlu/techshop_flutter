@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:techshop_flutter/shared/helper/BottomNavHelper.dart';
 import 'package:techshop_flutter/shared/utils/shared_preferences.dart';
 import '../../models/ProductModel.dart';
+import '../../routes/routes.dart';
 import '../../shared/services/cartItem/CartItemService.dart';
 import '../../shared/services/product/productService.dart';
 
@@ -38,7 +40,7 @@ class _DetailProductState extends State<DetailProduct> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, Routes.home);
           },
         ),
       ),
@@ -96,7 +98,7 @@ class _DetailProductState extends State<DetailProduct> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16.0, vertical: 8.0),
                             child: Text(
-                              "Giá: ${product.price} VND",
+                              "Giá: ${NumberFormat.currency(locale: 'vi', symbol: '₫').format(product.price)} ",
                               style: const TextStyle(
                                 fontSize: 18,
                                 color: Colors.red,
