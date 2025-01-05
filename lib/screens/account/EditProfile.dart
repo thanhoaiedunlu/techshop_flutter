@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/customer/CustomerModel.dart';
 
+import '../../routes/routes.dart';
 import '../../shared/services/account/AccountService.dart';
+import '../../shared/utils/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
   final int id; // Nhận ID từ màn hình khác
@@ -45,6 +47,13 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future<void> _updateProfile() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Không thể tắt dialog bằng cách bấm ra ngoài
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(), // Hiển thị loader
+      ),
+    );
     final updatedCustomer = CustomerModel(
       id: _customer!.id,
       fullname: _fullnameController.text,
@@ -63,7 +72,19 @@ class _EditProfileState extends State<EditProfile> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Cập nhật tài khoản thành công!')),
       );
-      Navigator.pop(context, '/'); // Quay lại màn hình trước đó
+      final userId = await SharedPreferencesHelper.getUserId();
+      if (userId != null) {
+        Navigator.pushNamed(
+          context,
+          Routes.account,
+          arguments: userId,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Please log in to view your account.')),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Cập nhật tài khoản thất bại!')),
@@ -129,17 +150,17 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      TextField(
-                        controller: _passwordController,
-                        decoration: const InputDecoration(
-                          labelText: 'Mật khẩu',
-                          border: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(12.0)),
-                          ),
-                        ),
-                        obscureText: true, // Thuộc tính che mật khẩu
-                      ),
+                      // TextField(
+                      //   controller: _passwordController,
+                      //   decoration: const InputDecoration(
+                      //     labelText: 'Mật khẩu',
+                      //     border: OutlineInputBorder(
+                      //       borderRadius:
+                      //       BorderRadius.all(Radius.circular(12.0)),
+                      //     ),
+                      //   ),
+                      //   obscureText: true, // Thuộc tính che mật khẩu
+                      // ),
                       const Spacer(),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(

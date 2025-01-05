@@ -44,7 +44,7 @@ class _EnterUsernameState extends State<EnterUsername> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[300], // Màu nền chính
+      backgroundColor: Colors.white, // Màu nền chính
       body: Center(
         child: SingleChildScrollView(
           child: Column(

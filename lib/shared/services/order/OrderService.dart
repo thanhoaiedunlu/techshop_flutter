@@ -6,8 +6,8 @@ import '../../constant/constants.dart';
 
 class OrderService {
   // Hàm lấy danh sách đơn hàng
-  Future<List<OrderModel>> getOrders() async {
-    final String url = '$baseUrl/api/order/list'; // Endpoint API
+  Future<List<OrderModel>> getOrders(int customerId) async {
+    final String url = '$baseUrl/api/order/customer/$customerId'; // Endpoint API
     final Uri uri = Uri.parse(url);
     print(url);
     try {
@@ -15,11 +15,11 @@ class OrderService {
         uri,
         headers: {'Content-Type': 'application/json'},
       );
-
       // Kiểm tra mã trạng thái phản hồi
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         // Chuyển đổi dữ liệu JSON thành danh sách OrderModel
+        print(data);
         return data.map((json) => OrderModel.fromJson(json)).toList();
       } else {
         throw Exception(

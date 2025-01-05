@@ -30,4 +30,27 @@ class PasswordResetService {
       return false;
     }
   }
+
+  // Phương thức để thay đổi mật khẩu
+  Future<bool> changePassword({
+    required int customerId,
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/customer/changePassword/$customerId');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({
+      'oldPassword': oldPassword,
+      'newPassword': newPassword,
+    });
+
+    print('Calling API: $url'); // In URL gọi API
+
+    try {
+      final response = await http.patch(url, headers: headers, body: body);
+      return response.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
 }

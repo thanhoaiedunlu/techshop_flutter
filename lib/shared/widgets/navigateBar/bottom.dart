@@ -57,7 +57,19 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         Navigator.pushNamed(context, '/');
         break;
       case 1:
-        Navigator.pushNamed(context, Routes.orderHistoryClient);
+        final userId = await SharedPreferencesHelper.getUserId();
+        if (userId != null) {
+          Navigator.pushNamed(
+            context,
+            Routes.orderHistoryClient,
+            arguments: userId,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('Please log in to view your account.')),
+          );
+        }
         break;
       case 2:
         Navigator.pushNamed(context, Routes.cart);

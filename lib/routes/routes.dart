@@ -4,9 +4,11 @@ import 'package:techshop_flutter/models/CategoryModel.dart';
 import 'package:techshop_flutter/models/OrderModel.dart';
 import 'package:techshop_flutter/screens/Account/GetProfile.dart';
 import 'package:techshop_flutter/screens/account/EditProfile.dart';
+import 'package:techshop_flutter/screens/account/UpdatePassword.dart';
 import 'package:techshop_flutter/screens/address/Address.dart';
 import 'package:techshop_flutter/screens/cart/Cart.dart';
 import 'package:techshop_flutter/screens/detailProduct/DetailProduct.dart';
+import 'package:techshop_flutter/screens/forgotPassword/enterUsername.dart';
 import 'package:techshop_flutter/screens/home/home.dart';
 import 'package:techshop_flutter/screens/login/login.dart';
 import 'package:techshop_flutter/screens/order/OrderInformation.dart';
@@ -31,6 +33,9 @@ class Routes {
   static const String addressList = '/addressList';
   static const String orderHistoryClient = '/orderHistoryClient';
   static const String orderHistoryDetail = '/orderHistoryDetail';
+  static const String  enterUserName= '/enterUsername';
+  static const String  updatePassword= '/updatePassword';
+
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -91,10 +96,28 @@ class Routes {
       case addressList:
         return MaterialPageRoute(builder: (_) => const AddressListPage());
       case orderHistoryClient:
+        if (settings.arguments is int) {
+          final args = settings.arguments as int; // Nhận productId từ arguments
+          return MaterialPageRoute(
+            builder: (_) => OrderHistoryScreen(customerId: args),
+          );
+        }
+        return _errorRoute(); // Nếu arguments không đúng kiểu
         // Màn hình lịch sử đơn hàng
-        return MaterialPageRoute(
-          builder: (_) => OrderHistoryScreen(),
+        // return MaterialPageRoute(
+        //   builder: (_) => OrderHistoryScreen(),
+        // );
+      case enterUserName:
+        return MaterialPageRoute(builder: (_)=> EnterUsername(),
         );
+      case updatePassword:
+        if (settings.arguments is int) {
+          final customerId = settings.arguments as int;
+          return MaterialPageRoute(
+            builder: (_) => UpdatePassword(customerId: customerId),
+          );
+        }
+        return _errorRoute(); // Nếu arguments không đúng kiểu
 
       case orderHistoryDetail:
         // Giả sử bạn truyền thẳng OrderModel sang màn hình chi tiết
