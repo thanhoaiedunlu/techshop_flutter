@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:techshop_flutter/models/CustomerModel.dart';
+import 'package:techshop_flutter/models/customer/CustomerModel.dart';
 import 'package:techshop_flutter/shared/constant/constants.dart';
 
 
@@ -74,6 +74,45 @@ class CustomerService {
     } catch (e) {
       // Xử lý lỗi khi có sự cố kết nối
       return null;
+    }
+  }
+  Future<List<CustomerModel>> getCustomers() async {
+    final String apiUrl = '$baseUrl/api/customer/list';
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final List<dynamic> customerJson = json.decode(response.body);
+        return customerJson.map((json) => CustomerModel.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load customers');
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+  Future<void> deleteCustomer(int customerId) async {
+    final uri = '$baseUrl/api/customer/$customerId'; // Đường dẫn API xóa sản phẩm
+    final url = Uri.parse(uri);
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: headers,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        // Xóa thành công
+        print('Customer deleted successfully');
+      } else {
+        // Lỗi phía server
+        throw Exception('Failed to delete customer: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Lỗi kết nối hoặc lỗi khác
+      throw Exception('Error deleting customer: $e');
     }
   }
 

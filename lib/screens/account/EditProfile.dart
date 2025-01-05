@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:techshop_flutter/models/CustomerModel.dart';
+import 'package:techshop_flutter/models/customer/CustomerModel.dart';
 
 import '../../shared/services/account/AccountService.dart';
 

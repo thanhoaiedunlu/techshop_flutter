@@ -40,6 +40,10 @@ class CustomTopNavigationBar extends StatelessWidget
           icon: const Icon(Icons.search),
           onPressed: onSearchPressed,
         ),
+        IconButton(
+          icon: const Icon(Icons.qr_code_scanner),
+          onPressed: onSearchPressed,
+        ),
       ],
     );
   }
