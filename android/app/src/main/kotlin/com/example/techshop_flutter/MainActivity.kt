@@ -18,18 +18,21 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "payOrder") {
                 val token: String? = call.argument("token")
+                println("Gọi ZaloPaySDK với token: $token")
                 ZaloPaySDK.init(2553, Environment.SANDBOX)
                 if (token != null) {
-                    ZaloPaySDK.getInstance().payOrder(this, token, "zalopay://app", object : PayOrderListener {
+                    ZaloPaySDK.getInstance().payOrder(this, token, "demozpdk://app", object : PayOrderListener {
                         override fun onPaymentSucceeded(p1: String?, p2: String?, p3: String?) {
                             result.success("Thanh toán thành công")
                         }
 
                         override fun onPaymentCanceled(p1: String?, p2: String?) {
+                            println("Thanh toán that bai")
                             result.success("Hủy thanh toán")
                         }
 
                         override fun onPaymentError(error: ZaloPayError, p1: String?, p2: String?) {
+                            println("Loi Thanh Toan")
                             result.success("Lỗi thanh toán: ${error.toString()}")
                         }
 
