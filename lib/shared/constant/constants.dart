@@ -9,7 +9,7 @@ class AppColors {
   static const Color errorColor = Color(0xFFF5222D); // Trạng thái "Đã hủy"
   static const Color textMutedColor =
       Color(0xFF8C8C8C); // Trạng thái trung tính
-
+  static const Color statusAlDelivered = Color(0xFF2D4ABC); // Màu chữ đậm
   static const Color statusBought = Colors.blue; // Đã mua
   static const Color statusDelivered = Colors.green; // Đã giao
   static const Color statusCancelled = Colors.red; // Đã hủy

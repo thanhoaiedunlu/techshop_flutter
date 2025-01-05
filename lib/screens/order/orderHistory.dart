@@ -3,36 +3,46 @@ import 'package:techshop_flutter/routes/routes.dart';
 import '../../models/OrderModel.dart';
 import '../../shared/services/order/OrderService.dart';
 import '../../shared/constant/constants.dart';
-import 'orderDetail.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   @override
   _OrderHistoryScreenState createState() => _OrderHistoryScreenState();
 }
 
-class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
+class _OrderHistoryScreenState extends State<OrderHistoryScreen>
+    with SingleTickerProviderStateMixin {
   final OrderService _orderService = OrderService();
   late Future<List<OrderModel>> _futureOrders;
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _futureOrders = _orderService.getOrders(); // Lấy danh sách đơn hàng
+    _tabController = TabController(length: 5, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   // Hàm trả về màu sắc trạng thái
   Color getStatusColor(String status) {
     switch (status) {
       case 'Đã mua':
-        return AppColors.statusBought; // Màu cho trạng thái "Đã mua"
-      case 'Đã giao':
-        return AppColors.statusDelivered; // Màu cho trạng thái "Đã giao"
-      case 'Đã hủy':
-        return AppColors.statusCancelled; // Màu cho trạng thái "Đã hủy"
+        return AppColors.statusBought;
       case 'Đang xử lý':
-        return AppColors.statusProcessing; // Màu cho trạng thái "Đang xử lý"
+        return AppColors.statusProcessing;
+      case 'Đang giao':
+        return AppColors.statusDelivered;
+      case 'Đã giao':
+        return AppColors.statusAlDelivered;
+      case 'Đã hủy':
+        return AppColors.statusCancelled;
       default:
-        return AppColors.statusDefault; // Màu mặc định
+        return AppColors.statusDefault;
     }
   }
 
@@ -52,15 +62,21 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           'Lịch Sử Mua Hàng',
           style: TextStyle(color: Colors.black),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
-            onPressed: () {
-              // Thực hiện tìm kiếm
-              showSearch(context: context, delegate: ProductSearchDelegate());
-            },
-          ),
-        ],
+        bottom: TabBar(
+          controller: _tabController,
+          isScrollable: true,
+          labelColor: Colors.black,
+          unselectedLabelColor: Colors.grey,
+          labelPadding: const EdgeInsets.only(left: 0, right: 35), // Điều chỉnh padding giữa các tab
+          indicatorColor: AppColors.primaryColor,
+          tabs: const [
+            Tab(text: 'Tất cả'),
+            Tab(text: 'Đang xử lý'),
+            Tab(text: 'Đang giao'),
+            Tab(text: 'Đã giao'),
+            Tab(text: 'Đã hủy'),
+          ],
+        ),
       ),
       backgroundColor: AppColors.backgroundLightColor,
       body: FutureBuilder<List<OrderModel>>(
@@ -75,92 +91,85 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           }
 
           final orders = snapshot.data!;
-          final allOrderDetails =
-              orders.expand((order) => order.orderDetails).toList();
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(10),
-            itemCount: allOrderDetails.length,
-            itemBuilder: (context, index) {
-              final detail = allOrderDetails[index];
-              final product = detail.productResponseDTO;
-              final order = orders
-                  .firstWhere((order) => order.orderDetails.contains(detail));
-
-              return Card(
-                color: Colors.white,
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                child: ListTile(
-                  leading: Image.network(
-                    product.img,
-                    width: 70,
-                    height: 100,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Icon(Icons.error),
-                  ),
-                  title: Text(
-                    product.name,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.black),
-                  ),
-                  subtitle: Text(
-                    'Giá: ${product.price}đ\nSố lượng: ${detail.quantity}',
-                    style: const TextStyle(color: AppColors.textMutedColor),
-                  ),
-                  trailing: Text(
-                    order.status,
-                    style: TextStyle(
-                      color: getStatusColor(order.status),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(context, Routes.orderHistoryDetail,
-                        arguments: order);
-                  },
-                ),
-              );
-            },
+          return TabBarView(
+            controller: _tabController,
+            children: [
+              buildOrderList(orders, null), // Tất cả
+              buildOrderList(orders, 'Đang xử lý'),
+              buildOrderList(orders, 'Đang giao'),
+              buildOrderList(orders, 'Đã giao'),
+              buildOrderList(orders, 'Đã hủy'),
+            ],
           );
         },
       ),
     );
   }
-}
 
-class ProductSearchDelegate extends SearchDelegate {
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = ''; // Xóa nội dung tìm kiếm
-        },
-      ),
-    ];
-  }
+  Widget buildOrderList(List<OrderModel> orders, String? statusFilter) {
+    final filteredOrders = statusFilter == null
+        ? orders
+        : orders.where((order) => order.status == statusFilter).toList();
 
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null); // Đóng giao diện tìm kiếm
+    if (filteredOrders.isEmpty) {
+      return const Center(child: Text('Không có đơn hàng nào'));
+    }
+
+    return ListView.builder(
+      itemCount: filteredOrders.length,
+      itemBuilder: (context, index) {
+        final order = filteredOrders[index];
+        final orderName = limitText(order.derivedOrderName, 10);
+        final receiver = order.receiver;
+        final status = order.status;
+
+        return Card(
+          color: Colors.white,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: ListTile(
+            leading: Image.network(
+              order.orderDetails.first.productResponseDTO.img,
+              width: 70,
+              height: 100,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+              const Icon(Icons.error),
+            ),
+            title: Text(
+              orderName,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.black),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text(
+              'Khách hàng: $receiver\nTổng tiền: ${order.totalAmount.toString()}đ',
+              style: const TextStyle(color: AppColors.textMutedColor),
+            ),
+            trailing: Text(
+              status,
+              style: TextStyle(
+                color: getStatusColor(status),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                '/orderDetail', // Sử dụng route name
+                arguments: order, // Truyền đối tượng `OrderModel` qua `arguments`
+              );
+            },
+          ),
+        );
       },
     );
   }
 
-  @override
-  Widget buildResults(BuildContext context) {
-    // Kết quả tìm kiếm (tùy chỉnh theo logic của bạn)
-    return Center(child: Text('Kết quả cho: $query'));
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // Gợi ý tìm kiếm (tùy chỉnh theo logic của bạn)
-    return Center(child: Text('Gợi ý cho: $query'));
+  String limitText(String text, int maxChars) {
+    if (text.length > maxChars) {
+      return '${text.substring(0, maxChars)}...';
+    }
+    return text;
   }
 }
