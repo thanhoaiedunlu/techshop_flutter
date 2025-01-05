@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techshop_flutter/screens/admin/order/adminOrderManagement.dart';
 import 'package:techshop_flutter/screens/admin/productManagement/ProductManagement.dart';
 
 import 'category/CategoryManagement.dart';
@@ -13,7 +14,7 @@ class AdminApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AdminDashboard(),
     );
@@ -30,10 +31,11 @@ class AdminDashboard extends StatelessWidget {
         backgroundColor: Colors.blue,
         title: const Text('Hi Admin',
             style: TextStyle(
-          color: Colors.white,
-        )),
+              color: Colors.white,
+            )),
         leading: const CircleAvatar(
-          backgroundImage: NetworkImage('https://res.cloudinary.com/drvydie5q/image/upload/v1735782747/Dynamic%20folders/h0ddx53n8jepv0cmxuaq.jpg'), // Thay ảnh avatar
+          backgroundImage: NetworkImage(
+              'https://res.cloudinary.com/drvydie5q/image/upload/v1735782747/Dynamic%20folders/h0ddx53n8jepv0cmxuaq.jpg'), // Thay ảnh avatar
         ),
         centerTitle: true,
       ),
@@ -42,49 +44,49 @@ class AdminDashboard extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.only(top: 30.0),
           child: GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-          children: [
-            _buildDashboardItem(
-              context,
-              icon: Icons.bar_chart,
-              label: 'Thống Kê',
-              color: Colors.blue,
-            ),
-            _buildDashboardItem(
-              context,
-              icon: Icons.people,
-              label: 'Khách Hàng',
-              color: Colors.orange,
-            ),
-            _buildDashboardItem(
-              context,
-              icon: Icons.shopping_basket,
-              label: 'Đơn Hàng',
-              color: Colors.pink,
-            ),
-            _buildDashboardItem(
-              context,
-              icon: Icons.category,
-              label: 'Danh Mục',
-              color: Colors.blueAccent,
-            ),
-            _buildDashboardItem(
-              context,
-              icon: Icons.inventory,
-              label: 'Sản Phẩm',
-              color: Colors.green,
-            ),
-            _buildDashboardItem(
-              context,
-              icon: Icons.logout,
-              label: 'Đăng Xuất',
-              color: Colors.purpleAccent,
-            ),
-          ],
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            children: [
+              _buildDashboardItem(
+                context,
+                icon: Icons.bar_chart,
+                label: 'Thống Kê',
+                color: Colors.blue,
+              ),
+              _buildDashboardItem(
+                context,
+                icon: Icons.people,
+                label: 'Khách Hàng',
+                color: Colors.orange,
+              ),
+              _buildDashboardItem(
+                context,
+                icon: Icons.shopping_basket,
+                label: 'Đơn Hàng',
+                color: Colors.pink,
+              ),
+              _buildDashboardItem(
+                context,
+                icon: Icons.category,
+                label: 'Danh Mục',
+                color: Colors.blueAccent,
+              ),
+              _buildDashboardItem(
+                context,
+                icon: Icons.inventory,
+                label: 'Sản Phẩm',
+                color: Colors.green,
+              ),
+              _buildDashboardItem(
+                context,
+                icon: Icons.logout,
+                label: 'Đăng Xuất',
+                color: Colors.purpleAccent,
+              ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -97,37 +99,43 @@ class AdminDashboard extends StatelessWidget {
           case 'Thống Kê':
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CategoryManagementScreen()),
+              MaterialPageRoute(
+                  builder: (context) => CategoryManagementScreen()),
             );
             break;
           case 'Khách Hàng':
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CustomerManagementScreen()),
+              MaterialPageRoute(
+                  builder: (context) => CustomerManagementScreen()),
             );
             break;
           case 'Đơn Hàng':
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CategoryManagementScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const AdminOrderManagement()),
             );
             break;
           case 'Danh Mục':
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CategoryManagementScreen()),
+              MaterialPageRoute(
+                  builder: (context) => CategoryManagementScreen()),
             );
             break;
           case 'Sản Phẩm':
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProductManagementScreen()),
+              MaterialPageRoute(
+                  builder: (context) => ProductManagementScreen()),
             );
             break;
           case 'Đăng Xuất':
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CategoryManagementScreen()),
+              MaterialPageRoute(
+                  builder: (context) => CategoryManagementScreen()),
             );
             break;
           default:
@@ -161,5 +169,4 @@ class AdminDashboard extends StatelessWidget {
       ),
     );
   }
-
 }

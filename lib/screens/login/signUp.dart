@@ -17,13 +17,17 @@ class _SignupState extends State<Signup> {
   final TextEditingController _passwordController = TextEditingController();
   final customerServices = CustomerService();
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Đăng ký',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Color(0xFF6495ED)),
+          style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF6495ED)),
         ),
         centerTitle: true,
       ),
@@ -40,7 +44,8 @@ class _SignupState extends State<Signup> {
                 decoration: const InputDecoration(
                   labelText: 'Họ và tên',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
                   ),
                   prefixIcon: Icon(Icons.person),
                 ),
@@ -57,7 +62,8 @@ class _SignupState extends State<Signup> {
                 decoration: const InputDecoration(
                   labelText: 'Tên đăng nhập',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
                   ),
                   prefixIcon: Icon(Icons.account_circle),
                 ),
@@ -74,7 +80,8 @@ class _SignupState extends State<Signup> {
                 decoration: const InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
                   ),
                   prefixIcon: Icon(Icons.email),
                 ),
@@ -83,7 +90,9 @@ class _SignupState extends State<Signup> {
                   if (value == null || value.isEmpty) {
                     return 'Vui lòng điền email';
                   }
-                  if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
+                  if (!RegExp(
+                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                      .hasMatch(value)) {
                     return 'Vui lòng nhập đúng định dạng email';
                   }
                   return null;
@@ -95,7 +104,8 @@ class _SignupState extends State<Signup> {
                 decoration: const InputDecoration(
                   labelText: 'Số điện thoại',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
                   ),
                   prefixIcon: Icon(Icons.phone),
                 ),
@@ -116,7 +126,8 @@ class _SignupState extends State<Signup> {
                 decoration: const InputDecoration(
                   labelText: 'Mật khẩu',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
                   ),
                   prefixIcon: Icon(Icons.lock),
                 ),
@@ -186,8 +197,6 @@ class _SignupState extends State<Signup> {
                   ),
                 ],
               )
-
-
             ],
           ),
         ),
@@ -215,7 +224,4 @@ class _SignupState extends State<Signup> {
       );
     }
   }
-
 }
-
-

@@ -40,7 +40,6 @@ class AccountService {
           'name': customer.fullname,
           'email': customer.email,
           'phone': customer.phone,
-          'password': customer.password,
         }),
       );
       return response.statusCode == 200;

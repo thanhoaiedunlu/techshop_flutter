@@ -4,6 +4,9 @@ import 'package:techshop_flutter/models/address/AddressModel.dart';
 import 'package:techshop_flutter/models/order/OrderRequestDto.dart';
 import 'package:techshop_flutter/routes/routes.dart';
 import 'package:techshop_flutter/shared/constant/constants.dart';
+import 'package:techshop_flutter/shared/helper/BottomNavHelper.dart';
+import 'package:techshop_flutter/shared/helper/zalopay/PaymentTest.dart';
+import 'package:techshop_flutter/shared/helper/zalopay/ZaloPayService.dart';
 import 'package:techshop_flutter/shared/services/address/AddressService.dart';
 import 'package:techshop_flutter/shared/services/cartItem/CartItemService.dart';
 import 'package:techshop_flutter/shared/services/order/OrderService.dart';
@@ -121,13 +124,37 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Đặt hàng thành công! Mã đơn: $orderId')),
         );
-        Navigator.pushReplacementNamed(context, Routes.home);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Đặt hàng thất bại! Vui lòng thử lại.')),
-        );
+        if (methodString == "COD") {
+          print("cod");
+          Navigator.pushReplacementNamed(context, Routes.home);
+        } else {
+          // Thanh toán qua ZaloPay
+          print("zalopay");
+          try {
+            String result =
+                await ZaloPayService.handlePayment(context, "1000000");
+            if (result == "successed") {
+              print("home");
+              Navigator.pushReplacementNamed(context, Routes.home);
+            } else if (result == "canceled") {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Thanh toán đã bị hủy.")),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Lỗi thanh toán: $result")),
+              );
+            }
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Lỗi không xác định: $e")),
+            );
+          }
+        }
       }
+
       var bool = await CartItemService.deleteCartItemByCartId(cartId!);
+      BottomNavHelper.reloadCartBadge();
     } catch (e) {
       print('Exception in _confirmOrder: $e');
       setState(() => _isSubmitting = false);
@@ -186,18 +213,18 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
               }
             },
           ),
-          RadioListTile<PaymentMethod>(
-            title: const Text('Thanh toán bằng Momo'),
-            value: PaymentMethod.MOMO,
-            groupValue: _selectedPaymentMethod,
-            onChanged: (PaymentMethod? value) {
-              if (value != null) {
-                setState(() {
-                  _selectedPaymentMethod = value;
-                });
-              }
-            },
-          ),
+          // RadioListTile<PaymentMethod>(
+          //   title: const Text('Thanh toán bằng Momo'),
+          //   value: PaymentMethod.MOMO,
+          //   groupValue: _selectedPaymentMethod,
+          //   onChanged: (PaymentMethod? value) {
+          //     if (value != null) {
+          //       setState(() {
+          //         _selectedPaymentMethod = value;
+          //       });
+          //     }
+          //   },
+          // ),
           // Nếu muốn hỗ trợ ZaloPay và VNPay, thêm RadioListTile tương tự bên dưới:
           RadioListTile<PaymentMethod>(
               title: const Text('Thanh toán bằng Zalo Pay'),
@@ -210,17 +237,17 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                   });
                 }
               }),
-          RadioListTile<PaymentMethod>(
-              title: const Text('Thanh toán bằng VN Pay'),
-              value: PaymentMethod.VN_PAY,
-              groupValue: _selectedPaymentMethod,
-              onChanged: (PaymentMethod? value) {
-                if (value != null) {
-                  setState(() {
-                    _selectedPaymentMethod = value;
-                  });
-                }
-              }),
+          // RadioListTile<PaymentMethod>(
+          //     title: const Text('Thanh toán bằng VN Pay'),
+          //     value: PaymentMethod.VN_PAY,
+          //     groupValue: _selectedPaymentMethod,
+          //     onChanged: (PaymentMethod? value) {
+          //       if (value != null) {
+          //         setState(() {
+          //           _selectedPaymentMethod = value;
+          //         });
+          //       }
+          //     }),
         ],
       ),
     );

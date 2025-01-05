@@ -20,7 +20,6 @@ class _EditProfileState extends State<EditProfile> {
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -38,7 +37,6 @@ class _EditProfileState extends State<EditProfile> {
         _fullnameController.text = _customer!.fullname;
         _emailController.text = _customer!.email;
         _phoneController.text = _customer!.phone;
-        _passwordController.text = _customer!.password;
       }
       _isLoading = false;
     });
@@ -48,12 +46,13 @@ class _EditProfileState extends State<EditProfile> {
     final updatedCustomer = CustomerModel(
       id: _customer!.id,
       fullname: _fullnameController.text,
-      username: _customer!.username, // Không thay đổi username
+      username: _customer!.username,
+      // Không thay đổi username
       email: _emailController.text,
       phone: _phoneController.text,
       role: _customer!.role,
       cartId: _customer!.cartId,
-      password: _passwordController.text, // Sử dụng giá trị từ input
+      password: '',
     );
 
     final accountService = AccountService();
@@ -129,17 +128,6 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      TextField(
-                        controller: _passwordController,
-                        decoration: const InputDecoration(
-                          labelText: 'Mật khẩu',
-                          border: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(12.0)),
-                          ),
-                        ),
-                        obscureText: true, // Thuộc tính che mật khẩu
-                      ),
                       const Spacer(),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(

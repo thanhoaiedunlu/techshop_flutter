@@ -4,7 +4,9 @@ import 'package:techshop_flutter/models/CategoryModel.dart';
 import 'package:techshop_flutter/models/OrderModel.dart';
 import 'package:techshop_flutter/screens/Account/GetProfile.dart';
 import 'package:techshop_flutter/screens/account/EditProfile.dart';
+import 'package:techshop_flutter/screens/account/UpdatePassword.dart';
 import 'package:techshop_flutter/screens/address/Address.dart';
+import 'package:techshop_flutter/screens/admin/AdminDashboard.dart';
 import 'package:techshop_flutter/screens/cart/Cart.dart';
 import 'package:techshop_flutter/screens/detailProduct/DetailProduct.dart';
 import 'package:techshop_flutter/screens/home/home.dart';
@@ -31,6 +33,8 @@ class Routes {
   static const String addressList = '/addressList';
   static const String orderHistoryClient = '/orderHistoryClient';
   static const String orderHistoryDetail = '/orderHistoryDetail';
+  static const String adminPage = '/adminPage';
+  static const String  updatePassword= '/updatePassword';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -95,7 +99,11 @@ class Routes {
         return MaterialPageRoute(
           builder: (_) => OrderHistoryScreen(),
         );
-
+      case adminPage:
+        // Placeholder for admin page
+        return MaterialPageRoute(
+          builder: (_) => const AdminDashboard(),
+        );
       case orderHistoryDetail:
         // Giả sử bạn truyền thẳng OrderModel sang màn hình chi tiết
         // Hoặc chỉ truyền orderId (tuỳ bạn)
@@ -105,7 +113,15 @@ class Routes {
             builder: (_) => OrderDetailScreen(order: order),
           );
         }
-        return _errorRoute(); // Nếu arguments không đúng kiểu/ Nếu arguments không đúng kiểu
+        return _errorRoute();
+      case updatePassword:
+        if (settings.arguments is int) {
+          final customerId = settings.arguments as int;
+          return MaterialPageRoute(
+            builder: (_) => UpdatePassword(customerId: customerId),
+          );
+        }
+        return _errorRoute(); // Nếu arguments không đúng kiểu  // Nếu arguments không đúng kiểu/ Nếu arguments không đúng kiểu
       default:
         return _errorRoute(); // Trường hợp không tìm thấy route
     }

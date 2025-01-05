@@ -74,9 +74,9 @@ class _ProductSearchState extends State<ProductSearch> {
           ),
         ],
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _currentIndex,
-      ), // Navigation bar tái sử dụng
+      // bottomNavigationBar: CustomBottomNavigationBar(
+      //   currentIndex: _currentIndex,
+      // ), // Navigation bar tái sử dụng
     );
   }
 }
