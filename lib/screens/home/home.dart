@@ -25,13 +25,18 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _searchController = TextEditingController();
   bool _isCategoryVisible = false; // Để điều khiển hiển thị danh mục
   bool _isSearching = false;
-
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   void _toggleSearch() {
     Navigator.pushNamed(context, Routes.productSearch);
   }
 
+
+
+
+
+
   void _showCategoryModal() {
-    showGeneralDialog(
+    showModalBottomSheet(
       context: context,
       barrierDismissible: true, // Allows dismissing by tapping outside
       barrierLabel: 'Categories', // Accessibility label
@@ -93,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                       child:
-                          CircularProgressIndicator()); // Hiển thị loading khi đang chờ dữ liệu
+                      CircularProgressIndicator()); // Hiển thị loading khi đang chờ dữ liệu
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text(
@@ -101,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(
                       child:
-                          Text('No products available.')); // Không có sản phẩm
+                      Text('No products available.')); // Không có sản phẩm
                 } else {
                   // Dữ liệu đã sẵn sàng, hiển thị danh sách sản phẩm
                   return ProductListView(products: snapshot.data!);
