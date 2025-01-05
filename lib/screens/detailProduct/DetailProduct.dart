@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techshop_flutter/shared/helper/BottomNavHelper.dart';
 import 'package:techshop_flutter/shared/utils/shared_preferences.dart';
 import '../../models/ProductModel.dart';
 import '../../shared/services/cartItem/CartItemService.dart';
@@ -70,7 +71,8 @@ class _DetailProductState extends State<DetailProduct> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
                               product.name,
                               style: const TextStyle(
@@ -80,7 +82,8 @@ class _DetailProductState extends State<DetailProduct> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
                               "Danh Mục: ${product.categoryName}",
                               style: const TextStyle(
@@ -90,7 +93,8 @@ class _DetailProductState extends State<DetailProduct> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
                             child: Text(
                               "Giá: ${product.price} VND",
                               style: const TextStyle(
@@ -101,7 +105,8 @@ class _DetailProductState extends State<DetailProduct> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
                             child: Text(
                               product.detail,
                               style: const TextStyle(fontSize: 14),
@@ -116,8 +121,8 @@ class _DetailProductState extends State<DetailProduct> {
                     color: Colors.white,
                     child: ElevatedButton(
                       onPressed: () async {
-                        final cartId =
-                            await SharedPreferencesHelper.getCartIdByUserLogin();
+                        final cartId = await SharedPreferencesHelper
+                            .getCartIdByUserLogin();
                         if (cartId != null) {
                           final success = await CartItemService()
                               .addCartItem(cartId, product.id, 1);
@@ -131,14 +136,18 @@ class _DetailProductState extends State<DetailProduct> {
                               duration: const Duration(seconds: 2),
                             ),
                           );
+                          if (success) {
+                            await BottomNavHelper.reloadCartBadge();
+                          }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content:
-                              Text('Failed to retrieve cart ID. Please log in.'),
+                              content: Text(
+                                  'Failed to retrieve cart ID. Please log in.'),
                             ),
                           );
-                        }                      },
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(300, 50),
                         shape: RoundedRectangleBorder(

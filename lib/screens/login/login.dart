@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/customer/CustomerModel.dart';
 import 'package:techshop_flutter/routes/routes.dart';
+import 'package:techshop_flutter/screens/forgotPassword/enterUsername.dart';
 import 'package:techshop_flutter/screens/login/signUp.dart';
 import 'package:techshop_flutter/shared/services/customer/customerService.dart';
 import '../../shared/utils/shared_preferences.dart';
@@ -16,7 +17,8 @@ class _LoginState extends State<Login> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final customerServices = CustomerService();
-  final _formKey = GlobalKey<FormState>(); // Khai báo GlobalKey cho Form
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +26,10 @@ class _LoginState extends State<Login> {
         title: const Text(
           'Đăng Nhập',
           style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF6495ED)),
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF6495ED),
+          ),
         ),
         centerTitle: true,
       ),
@@ -34,7 +37,7 @@ class _LoginState extends State<Login> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey, // Sử dụng _formKey để quản lý trạng thái form
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -44,8 +47,7 @@ class _LoginState extends State<Login> {
                 decoration: const InputDecoration(
                   labelText: 'Tên đăng nhập',
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   prefixIcon: Icon(Icons.account_circle),
                 ),
@@ -62,8 +64,7 @@ class _LoginState extends State<Login> {
                 decoration: const InputDecoration(
                   labelText: 'Mật khẩu',
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(20.0)), // Bo tròn góc
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   prefixIcon: Icon(Icons.lock),
                 ),
@@ -72,7 +73,7 @@ class _LoginState extends State<Login> {
                   if (value == null || value.isEmpty) {
                     return 'Vui lòng điền mật khẩu';
                   }
-                  return null; // Nếu không có lỗi, trả về null
+                  return null;
                 },
               ),
               const SizedBox(height: 24),
@@ -85,13 +86,11 @@ class _LoginState extends State<Login> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6495ED),
                   foregroundColor: Colors.white,
-                  // Chữ màu trắng
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  // Tăng chiều cao nút
                   textStyle: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                  ), // Kiểu chữ
+                  ),
                 ),
                 child: const Text('Đăng Nhập'),
               ),
@@ -115,6 +114,26 @@ class _LoginState extends State<Login> {
                     onTap: () {
                       Navigator.push(
                         context,
+                        MaterialPageRoute(
+                            builder: (context) => const EnterUsername()),
+                      );
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        'Quên mật khẩu',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
                         MaterialPageRoute(builder: (context) => const Signup()),
                       );
                     },
@@ -131,7 +150,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -148,18 +167,21 @@ class _LoginState extends State<Login> {
     );
     if (customer != null) {
       await SharedPreferencesHelper.saveUserData(customer);
-      // Hiển thị SnackBar
       CustomerModel? savedCustomer =
           await SharedPreferencesHelper.getUserData();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Welcome, ${savedCustomer?.fullname}!')),
       );
-      // Đợi một khoảng thời gian để SnackBar hiển thị xong
+
       Future.delayed(const Duration(seconds: 1), () {
-        Navigator.pushReplacementNamed(context, Routes.home);
+        if (customer.role) {
+          Navigator.pushReplacementNamed(context, Routes.adminPage);
+        } else {
+          Navigator.pushReplacementNamed(context, Routes.home);
+        }
+
       });
     } else {
-      // Nếu không có customer, bạn có thể hiển thị lỗi hoặc thực hiện hành động khác.
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login failed. Please try again.')),
       );

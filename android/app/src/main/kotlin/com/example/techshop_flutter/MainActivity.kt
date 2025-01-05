@@ -26,12 +26,12 @@ class MainActivity : FlutterActivity() {
                     ZaloPaySDK.getInstance()
                         .payOrder(this, token, "demozpdk://app", object : PayOrderListener {
                             override fun onPaymentSucceeded(p1: String?, p2: String?, p3: String?) {
-                                result.success("Thanh toán thành công")
+                                result.success("successed")
 
                             }
 
                             override fun onPaymentCanceled(p1: String?, p2: String?) {
-                                result.success("Hủy thanh toán")
+                                result.success("canceled")
                             }
 
                             override fun onPaymentError(

@@ -8,6 +8,8 @@ import '../../../../../../shared/services/product/productService.dart';
 
 
 class ProductManagementScreen extends StatefulWidget {
+  const ProductManagementScreen({super.key});
+
   @override
   _ProductManagementScreenState createState() => _ProductManagementScreenState();
 }

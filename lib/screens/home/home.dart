@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/models/ProductModel.dart';
+import 'package:techshop_flutter/routes/routes.dart';
+import 'package:techshop_flutter/shared/helper/BottomNavHelper.dart';
 import 'package:techshop_flutter/shared/services/product/productService.dart';
 import 'package:techshop_flutter/shared/widgets/category/categoryList.dart';
 import 'package:techshop_flutter/shared/widgets/navigateBar/bottom.dart';
@@ -19,11 +21,10 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   bool _isSearching = false;
   TextEditingController _searchController = TextEditingController();
-  bool _isCategoryVisible = false; // Để điều khiển hiển thị danh mục
+
+// Để điều khiển hiển thị danh mục
   void _toggleSearch() {
-    setState(() {
-      _isSearching = !_isSearching; // Toggle search mode
-    });
+    Navigator.pushNamed(context, Routes.productSearch);
   }
 
   void _showCategoryModal() {
@@ -57,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                       child:
-                      CircularProgressIndicator()); // Hiển thị loading khi đang chờ dữ liệu
+                          CircularProgressIndicator()); // Hiển thị loading khi đang chờ dữ liệu
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text(
@@ -65,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(
                       child:
-                      Text('No products available.')); // Không có sản phẩm
+                          Text('No products available.')); // Không có sản phẩm
                 } else {
                   // Dữ liệu đã sẵn sàng, hiển thị danh sách sản phẩm
                   return ProductListView(products: snapshot.data!);
@@ -76,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
+        key: BottomNavHelper.bottomNavKey, // Gán key
         currentIndex: _currentIndex,
       ), // Navigation bar tái sử dụng
     );

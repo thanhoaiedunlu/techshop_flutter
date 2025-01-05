@@ -75,6 +75,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       });
     }
   }
+
   Future<void> _saveProduct() async {
     if (_selectedImage != null) {
       try {
@@ -82,20 +83,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
           'file', // Tên trường file trong API
           _selectedImage!.path,
         );
-        final uploadedImageUrl = await _imageUploadService.uploadImage(multipartFile);
+        final uploadedImageUrl =
+            await _imageUploadService.uploadImage(multipartFile);
         print("Link :" + uploadedImageUrl);
         setState(() {
           imageUrl = uploadedImageUrl;
         });
 
         final success = await _productService.editProduct(
-          int.parse(widget.productId),
-          name: _nameController.text,
-          img: imageUrl,
-          price: widget.productPrice,
-          categoryName: selectedCategoryId.toString(),
-          detail: widget.productDetails
-        );
+            int.parse(widget.productId),
+            name: _nameController.text,
+            img: imageUrl,
+            price: widget.productPrice,
+            categoryName: selectedCategoryId.toString(),
+            detail: widget.productDetails);
 
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -130,8 +131,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           img: imageUrl,
           price: _priceController.text,
           categoryName: selectedCategoryId.toString(),
-          detail: _detailsController.text
-      );
+          detail: _detailsController.text);
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -173,8 +173,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: _selectedImage != null
-                            ? FileImage(_selectedImage!) // Hiển thị hình ảnh được chọn
-                            : NetworkImage(imageUrl) as ImageProvider, // Hiển thị hình ảnh từ URL
+                            ? FileImage(
+                                _selectedImage!) // Hiển thị hình ảnh được chọn
+                            : NetworkImage(imageUrl) as ImageProvider,
+                        // Hiển thị hình ảnh từ URL
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -206,34 +208,51 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 children: [
                   TextFormField(
                     controller: _nameController,
-                    decoration: InputDecoration(labelText: "Tên sản phẩm",  labelStyle: TextStyle(fontSize: 18), // Tăng kích thước label khi không được chọn
-                      floatingLabelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), // Tăng kích thước khi label nổi lên
-                      border: OutlineInputBorder(),),
+                    decoration: InputDecoration(
+                      labelText: "Tên sản phẩm",
+                      labelStyle: TextStyle(fontSize: 18),
+                      // Tăng kích thước label khi không được chọn
+                      floatingLabelStyle:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      // Tăng kích thước khi label nổi lên
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _priceController,
-                    decoration: InputDecoration(labelText: "Giá bán VNĐ",  labelStyle: TextStyle(fontSize: 18), // Tăng kích thước label khi không được chọn
-                      floatingLabelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), // Tăng kích thước khi label nổi lên
-                      border: OutlineInputBorder(),),
+                    decoration: InputDecoration(
+                      labelText: "Giá bán VNĐ",
+                      labelStyle: TextStyle(fontSize: 18),
+                      // Tăng kích thước label khi không được chọn
+                      floatingLabelStyle:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      // Tăng kích thước khi label nổi lên
+                      border: OutlineInputBorder(),
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                   SizedBox(height: 16),
                   DropdownButtonFormField<String>(
-                    value: categories.any((category) => category.name.toString() == selectedCategoryId)
+                    value: categories.any((category) =>
+                            category.name.toString() == selectedCategoryId)
                         ? selectedCategoryId
                         : null, // Đặt giá trị null nếu không tìm thấy
                     decoration: InputDecoration(
                       labelText: "Danh mục",
                       border: OutlineInputBorder(),
-                      labelStyle: TextStyle(fontSize: 18), // Tăng kích thước label khi không được chọn
-                      floatingLabelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), // Tăng kích thước khi label nổi lên
+                      labelStyle: TextStyle(fontSize: 18),
+                      // Tăng kích thước label khi không được chọn
+                      floatingLabelStyle: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight
+                              .bold), // Tăng kích thước khi label nổi lên
                     ),
                     items: categories
                         .map((category) => DropdownMenuItem<String>(
-                      value: category.name.toString(),
-                      child: Text(category.name),
-                    ))
+                              value: category.name.toString(),
+                              child: Text(category.name),
+                            ))
                         .toList(),
                     onChanged: (value) {
                       setState(() {
@@ -241,32 +260,39 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       });
                     },
                   ),
-
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _detailsController,
                     decoration: InputDecoration(
                       labelText: "Chi tiết sản phẩm",
                       border: OutlineInputBorder(),
-                      labelStyle: TextStyle(fontSize: 18), // Tăng kích thước label khi không được chọn
-                      floatingLabelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), // Tăng kích thước khi label nổi lên
+                      labelStyle: TextStyle(fontSize: 18),
+                      // Tăng kích thước label khi không được chọn
+                      floatingLabelStyle: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight
+                              .bold), // Tăng kích thước khi label nổi lên
                       // Thêm viền nếu cần
                     ),
                     maxLines: 3,
-                    keyboardType: TextInputType.multiline, // Đảm bảo hỗ trợ nhiều dòng
-                    textInputAction: TextInputAction.newline, // Cho phép xuống dòng
-                    style: TextStyle(fontSize: 16, fontFamily: 'Roboto'), // Tùy chỉnh hiển thị chữ tiếng Việt
+                    keyboardType: TextInputType.multiline,
+                    // Đảm bảo hỗ trợ nhiều dòng
+                    textInputAction: TextInputAction.newline,
+                    // Cho phép xuống dòng
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontFamily:
+                            'Roboto'), // Tùy chỉnh hiển thị chữ tiếng Việt
                   ),
-
                   SizedBox(height: 32),
                   ElevatedButton(
                     onPressed: _saveProduct,
                     child: Text("Lưu chỉnh sửa"),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                       backgroundColor: Colors.blue,
-
                     ),
                   ),
                 ],

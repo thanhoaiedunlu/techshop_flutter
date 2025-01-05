@@ -42,7 +42,7 @@ class OrderService {
       final uri = Uri.parse(
         '$baseUrl/api/order?method=$paymentMethod&status=$status',
       );
-
+      print(uri);
       // Chuyển body sang JSON
       final bodyJson = jsonEncode(dto.toJson());
 
@@ -69,6 +69,31 @@ class OrderService {
     } catch (e) {
       print('Exception: $e');
       return null;
+    }
+  }
+
+  Future<List<OrderModel>> getOrdersByStatus(String status) async {
+    final String url = '$baseUrl/api/order/$status'; // Endpoint API
+    final Uri uri = Uri.parse(url);
+    print(url);
+    try {
+      final response = await http.get(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      // Kiểm tra mã trạng thái phản hồi
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        // Chuyển đổi dữ liệu JSON thành danh sách OrderModel
+        return data.map((json) => OrderModel.fromJson(json)).toList();
+      } else {
+        throw Exception(
+            'Failed to load orders. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching orders: $e');
+      return [];
     }
   }
 }
