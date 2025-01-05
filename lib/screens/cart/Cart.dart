@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:techshop_flutter/models/CartItemModel.dart';
-import 'package:techshop_flutter/models/CartModel.dart';
 import 'package:techshop_flutter/shared/services/cart/CartService.dart';
 import 'package:techshop_flutter/shared/services/cartItem/CartItemService.dart';
 import 'package:techshop_flutter/shared/ultis/shared_preferences.dart';
@@ -103,7 +103,10 @@ class _CartScreenState extends State<CartScreen> {
       const SnackBar(content: Text('Proceeding to checkout...')),
     );
   }
-
+  String formattedPrice(double totalPrice) {
+    final formatter = NumberFormat.currency(locale: 'vi_VN', symbol: 'vn₫');
+    return formatter.format(totalPrice);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,7 +156,7 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ),
                               Text(
-                                'Giá: ${item.product.price} VND',
+                                'Giá: ${item.product.formattedPrice}',
                               ),
                             ],
                           ),
@@ -198,7 +201,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
                     Text(
-                      '${_totalPrice.toStringAsFixed(0)} VND',
+                      formattedPrice(_totalPrice),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

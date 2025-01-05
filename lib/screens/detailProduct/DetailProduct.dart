@@ -92,7 +92,7 @@ class _DetailProductState extends State<DetailProduct> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                             child: Text(
-                              "Giá: ${product.price} VND",
+                              "Giá: ${product.formattedPrice}",
                               style: const TextStyle(
                                 fontSize: 18,
                                 color: Colors.red,

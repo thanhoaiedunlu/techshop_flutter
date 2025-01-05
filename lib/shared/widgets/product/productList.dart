@@ -28,7 +28,7 @@ class ProductListView extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text('${product.price} VND'),
+            subtitle: Text(product.formattedPrice),
             trailing: IconButton(
               icon: const Icon(Icons.add_shopping_cart),
               onPressed: () async {

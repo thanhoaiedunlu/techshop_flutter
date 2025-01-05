@@ -154,7 +154,7 @@ class OrderDetailScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                'Giá: ${product.price}đ',
+                                'Giá: ${product.formattedPrice}',
                                 style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black54,
