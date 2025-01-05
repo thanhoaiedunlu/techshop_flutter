@@ -44,4 +44,21 @@ class CartItemService {
       return false; // Xử lý lỗi
     }
   }
+
+  static Future<bool> deleteCartItemByCartId(int cartId) async {
+    final url = Uri.parse('$baseUrl/api/cartItem/cartId/$cartId');
+
+    final response = await http.delete(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    // Nếu server trả về HTTP 200, coi như thành công.
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      // Trường hợp còn lại xử lý thất bại
+      return false;
+    }
+  }
 }

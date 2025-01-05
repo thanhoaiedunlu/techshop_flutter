@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:techshop_flutter/shared/ultis/shared_preferences.dart';
+import 'package:techshop_flutter/shared/utils/shared_preferences.dart';
 import '../../models/ProductModel.dart';
 import '../../shared/services/cartItem/CartItemService.dart';
 import '../../shared/services/product/productService.dart';
