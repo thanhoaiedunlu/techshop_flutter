@@ -155,7 +155,7 @@ class _LoginState extends State<Login> {
         SnackBar(content: Text('Welcome, ${savedCustomer?.fullname}!')),
       );
       // Đợi một khoảng thời gian để SnackBar hiển thị xong
-      Future.delayed(const Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 1), () {
         Navigator.pushReplacementNamed(context, Routes.home);
       });
     } else {
