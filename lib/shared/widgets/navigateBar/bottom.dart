@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:techshop_flutter/shared/services/cart/CartService.dart';
+import 'package:techshop_flutter/shared/services/cartItem/CartItemService.dart';
 import '../../../routes/routes.dart';
 import '../../utils/shared_preferences.dart';
 
@@ -12,14 +13,44 @@ class CustomBottomNavigationBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CustomBottomNavigationBarState createState() =>
-      _CustomBottomNavigationBarState();
+  CustomBottomNavigationBarState createState() =>
+      CustomBottomNavigationBarState(); // Đổi tên State thành public
 }
 
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+  // Biến lưu số lượng sản phẩm trong giỏ
+  int _cartItemCount = 0;
+
+  // Service gọi API lấy số lượng cart
+  final CartItemService cartItemService = CartItemService();
+  final CartService cartService = CartService();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCartItemCount();
+  }
+
+  /// Hàm tải số lượng sản phẩm từ API
+  Future<void> _loadCartItemCount() async {
+    final cartId = await SharedPreferencesHelper.getCartIdByUserLogin();
+    if (cartId != null) {
+      final quantity = await cartService.getQuantityCartItemInCart(cartId);
+      if (quantity != null) {
+        setState(() {
+          _cartItemCount = quantity;
+        });
+      }
+    }
+  }
+
+  /// Hàm public để **bên ngoài** gọi, cập nhật badge
+  Future<void> refreshBadge() async {
+    await _loadCartItemCount();
+  }
+
   // Hàm xử lý khi tab được chọn
   Future<void> _onTabTapped(int index) async {
-    // Dẫn đến các màn hình tương ứng khi bấm vào các tab
     switch (index) {
       case 0:
         Navigator.pushNamed(context, '/');
@@ -48,66 +79,59 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     }
   }
 
-  // Hàm hiển thị hộp thoại đăng xuất
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Logged out successfully!')),
-                );
-                // Đăng xuất thành công, có thể làm gì đó ở đây
-              },
-              child: const Text('Logout'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      // Phân bổ đều các mục
       currentIndex: widget.currentIndex,
       onTap: _onTabTapped,
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.grey,
       selectedIconTheme: const IconThemeData(size: 30.0),
-      // Đồng bộ kích thước biểu tượng
       unselectedIconTheme: const IconThemeData(size: 30.0),
-      // Đồng bộ kích thước biểu tượng
       showSelectedLabels: true,
-      // Hiển thị nhãn cho mục được chọn
       showUnselectedLabels: true,
-      // Hiển thị nhãn cho mục không được chọn
-      items: const [
-        BottomNavigationBarItem(
+      items: [
+        const BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.receipt),
           label: 'Receipt',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_cart),
+          icon: Stack(
+            children: [
+              const Icon(Icons.shopping_cart),
+              if (_cartItemCount > 0)
+                Positioned(
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 20,
+                      minHeight: 20,
+                    ),
+                    child: Text(
+                      '$_cartItemCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           label: 'Cart',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.account_circle_outlined),
           label: 'Account',
         ),

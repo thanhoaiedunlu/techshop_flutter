@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const String baseUrl = "http://192.168.1.244:8080";
+const String baseUrl = "http://192.168.1.220:8080";
 
 class AppColors {
   static const Color primaryColor = Color(0xFFE6F7FF); // Màu cam chính (Shopee)
@@ -18,6 +18,7 @@ class AppColors {
 }
 
 enum OrderStatus {
+  PENDING_PAYMENT,
   PENDING,
   SHIPPING,
   DELIVERED,

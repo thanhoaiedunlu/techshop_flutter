@@ -1,10 +1,12 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:techshop_flutter/models/ProductModel.dart';
 import 'package:techshop_flutter/routes/routes.dart';
 import 'package:techshop_flutter/shared/services/cartItem/CartItemService.dart';
 import 'package:techshop_flutter/shared/utils/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+import 'package:techshop_flutter/shared/widgets/navigateBar/bottom.dart';
+
+// Sửa import cho đúng với file chứa CustomBottomNavigationBar (nếu cần)
 
 class ProductListView extends StatelessWidget {
   final List<ProductModel> products;
@@ -21,7 +23,7 @@ class ProductListView extends StatelessWidget {
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: ListTile(
-            leading: Image.network(product.img),
+            leading: Image.network(product.img, width: 60, fit: BoxFit.cover),
             title: Text(
               product.name,
               maxLines: 1,
@@ -37,6 +39,7 @@ class ProductListView extends StatelessWidget {
                 if (cartId != null) {
                   final success = await CartItemService()
                       .addCartItem(cartId, product.id, 1);
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
@@ -47,6 +50,14 @@ class ProductListView extends StatelessWidget {
                       duration: const Duration(seconds: 2),
                     ),
                   );
+
+                  if (success) {
+                    // Tìm widget cha (hoặc ancestor) là CustomBottomNavigationBar
+                    final bottomNavState = context.findAncestorStateOfType<
+                        CustomBottomNavigationBarState>();
+                    // Gọi hàm refreshBadge() để cập nhật chấm đỏ
+                    bottomNavState?.refreshBadge();
+                  }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

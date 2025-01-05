@@ -107,7 +107,8 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
       );
 
       final methodString = _mapPaymentMethodToServer(_selectedPaymentMethod);
-      final statusString = "PENDING";
+      final statusString =
+          methodString == "COD" ? "PENDING" : "PENDING_PAYMENT";
 
       final orderId = await OrderService.saveOrder(
         methodString,
@@ -120,7 +121,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Đặt hàng thành công! Mã đơn: $orderId')),
         );
-        Navigator.popUntil(context, ModalRoute.withName(Routes.home));
+        Navigator.pushReplacementNamed(context, Routes.home);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Đặt hàng thất bại! Vui lòng thử lại.')),
