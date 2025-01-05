@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:techshop_flutter/screens/admin/productManagement/ProductManagement.dart';
 import 'package:techshop_flutter/models/CategoryModel.dart';
 import 'package:techshop_flutter/shared/services/category/CategoryService.dart';
 import 'package:techshop_flutter/shared/services/product/productService.dart';
 
 import '../../../shared/services/expand/ImageUploadService.dart';
-import 'ProductManagement.dart';
 
 class EditProductScreen extends StatefulWidget {
   final String productId;

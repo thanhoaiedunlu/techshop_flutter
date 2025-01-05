@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:techshop_flutter/screens/admin/productManagement/ProductManagement.dart';
-import 'package:techshop_flutter/shared/widgets/category/categoryList.dart';
 
 import 'category/CategoryManagement.dart';
 import 'customer/CustomerManagement.dart';

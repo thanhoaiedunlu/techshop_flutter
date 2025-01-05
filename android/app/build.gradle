@@ -79,7 +79,7 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
     implementation("commons-codec:commons-codec:1.14")
-    implementation fileTree(dir: "D:\\zalopayLib", include: ["*.aar", "*.jar"])
+    implementation fileTree(dir: "D:\\Workspace\\techshop_flutter\\zalopayLib", include: ["*.aar", "*.jar"])
 
     // Thêm các thư viện Firebase khác nếu cần
     // https://firebase.google.com/docs/android/setup#available-libraries

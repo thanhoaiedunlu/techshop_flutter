@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/src/multipart_file.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:techshop_flutter/screens/admin/category/CategoryManagement.dart';
 import 'package:techshop_flutter/shared/services/category/CategoryService.dart';
 import 'package:techshop_flutter/shared/services/expand/ImageUploadService.dart';
