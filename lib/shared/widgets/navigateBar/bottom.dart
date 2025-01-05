@@ -8,9 +8,9 @@ class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex; // Tab hiện tại
 
   const CustomBottomNavigationBar({
-    Key? key,
+    super.key,
     required this.currentIndex,
-  }) : super(key: key);
+  });
 
   @override
   CustomBottomNavigationBarState createState() =>
@@ -34,6 +34,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   /// Hàm tải số lượng sản phẩm từ API
   Future<void> _loadCartItemCount() async {
     final cartId = await SharedPreferencesHelper.getCartIdByUserLogin();
+    print(cartId);
     if (cartId != null) {
       final quantity = await cartService.getQuantityCartItemInCart(cartId);
       if (quantity != null) {
@@ -106,22 +107,24 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               const Icon(Icons.shopping_cart),
               if (_cartItemCount > 0)
                 Positioned(
+                  top: 0,
                   right: 0,
                   child: Container(
-                    padding: const EdgeInsets.all(4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     constraints: const BoxConstraints(
-                      minWidth: 20,
-                      minHeight: 20,
+                      minWidth: 10,
+                      minHeight: 10,
                     ),
                     child: Text(
                       '$_cartItemCount',
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: 8,
                       ),
                       textAlign: TextAlign.center,
                     ),

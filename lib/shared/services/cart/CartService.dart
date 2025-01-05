@@ -20,7 +20,7 @@ class CartService {
   }
 
   Future<int?> getQuantityCartItemInCart(int cartId) async {
-    final url = Uri.parse('$baseUrl/api/cartItem/quantity/$cartId');
+    final url = Uri.parse('$baseUrl/api/cart/quantity/$cartId');
     print(url);
     final response =
         await http.get(url, headers: {'Content-Type': 'application/json'});
