@@ -5,18 +5,23 @@ import 'package:techshop_flutter/shared/constant/constants.dart';
 import 'package:http/http.dart' as http;
 
 class CartItemService {
-  Future<CartItemModel?> updateQuantityCartItem(
-      int cartItemId, int quantity) async {
+  Future<bool?> updateQuantityCartItem(int cartItemId, int quantity) async {
     final url = Uri.parse(
         '$baseUrl/api/cartItem/updatequantity/$cartItemId?quantity=$quantity');
-    final response =
-        await http.put(url, headers: {'Content-Type': 'application/json'});
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data =
-          jsonDecode(utf8.decode(response.bodyBytes));
-      return CartItemModel.fromJson(data);
+      print('Update successful.');
+      return true;
     } else {
-      return null; // Xử lý lỗi
+      print('Server Error: ${response.statusCode}');
+      return false;
     }
   }
 

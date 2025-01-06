@@ -4,11 +4,12 @@ import '../../models/OrderModel.dart';
 import '../../routes/routes.dart';
 import '../../shared/constant/constants.dart';
 import '../../shared/services/order/OrderService.dart';
-import '../../shared/utils/shared_preferences.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   final int customerId;
+
   const OrderHistoryScreen({super.key, required this.customerId});
+
   @override
   _OrderHistoryScreenState createState() => _OrderHistoryScreenState();
 }
@@ -23,8 +24,10 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
   @override
   void initState() {
     super.initState();
-    _futureOrders = _orderService.getOrders(widget.customerId); // Lấy danh sách đơn hàng từ API
-    _tabController = TabController(length: 5, vsync: this); // Tạo controller cho TabBar
+    _futureOrders = _orderService
+        .getOrders(widget.customerId); // Lấy danh sách đơn hàng từ API
+    _tabController =
+        TabController(length: 5, vsync: this); // Tạo controller cho TabBar
     _tabController.addListener(() {
       // Cập nhật trạng thái lọc khi tab thay đổi
       setState(() {
@@ -63,12 +66,12 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
         preferredSize: const Size.fromHeight(120), // Giảm chiều cao của AppBar
         child: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: AppColors.primaryColor,
           flexibleSpace: SafeArea(
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                   child: Row(
                     children: [
                       IconButton(
@@ -93,13 +96,15 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
                 ),
                 // TabBar phần quan trọng
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0), // Điều chỉnh khoảng cách giữa phần trên và TabBar
+                  padding: const EdgeInsets.only(top: 8.0),
+                  // Điều chỉnh khoảng cách giữa phần trên và TabBar
                   child: TabBar(
                     controller: _tabController,
                     isScrollable: true,
                     unselectedLabelColor: AppColors.textMutedColor,
                     indicatorColor: AppColors.primaryColor,
                     indicatorWeight: 3.0,
+                    tabAlignment: TabAlignment.start,
                     tabs: const [
                       Tab(text: 'Tất cả'),
                       Tab(text: 'Đang chờ xử lý'),
@@ -114,12 +119,13 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
           ),
         ),
       ),
-      backgroundColor: AppColors.primaryColor,
       body: FutureBuilder<List<OrderModel>>(
         future: _futureOrders,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator()); // Hiển thị khi đang tải dữ liệu
+            return const Center(
+                child:
+                    CircularProgressIndicator()); // Hiển thị khi đang tải dữ liệu
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
@@ -185,7 +191,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
                 width: 70,
                 height: 100,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.error),
               ),
               title: Text(
                 order.derivedOrderName ?? 'Không có tên',
@@ -195,7 +202,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
                 ),
               ),
               subtitle: Text(
-                    'Tổng tiền: ${NumberFormat.currency(locale: 'vi', symbol: '₫').format(order.totalAmount ?? 0)} ',
+                'Tổng tiền: ${NumberFormat.currency(locale: 'vi', symbol: '₫').format(order.totalAmount ?? 0)} ',
                 style: TextStyle(color: AppColors.textMutedColor),
               ),
               trailing: Text(
@@ -225,4 +232,3 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
     }
   }
 }
-

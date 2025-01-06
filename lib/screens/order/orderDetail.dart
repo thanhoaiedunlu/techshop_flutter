@@ -11,16 +11,17 @@ class OrderDetailScreen extends StatelessWidget {
   final OrderModel order;
 
   const OrderDetailScreen({Key? key, required this.order}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // Định dạng ngày đặt hàng
     final formattedOrderDate =
-    DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(order.orderDate));
+        DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(order.orderDate));
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          getOrderStatusText(order.status), // Hiển thị trạng thái đơn hàng
+          order.status, // Hiển thị trạng thái đơn hàng
           style: const TextStyle(color: Colors.black),
         ),
         backgroundColor: AppColors.primaryColor,
@@ -48,8 +49,8 @@ class OrderDetailScreen extends StatelessWidget {
                       Expanded(
                         child: Text(
                           '${order.receiver} (${order.numberPhone})\n'
-                              '${order.address}\n'
-                              'Ngày đặt hàng: $formattedOrderDate',
+                          '${order.address}\n'
+                          'Ngày đặt hàng: $formattedOrderDate',
                           style: const TextStyle(fontSize: 16),
                         ),
                       ),
@@ -91,7 +92,7 @@ class OrderDetailScreen extends StatelessWidget {
                           height: 80,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.error, size: 80),
+                              const Icon(Icons.error, size: 80),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -132,7 +133,6 @@ class OrderDetailScreen extends StatelessWidget {
                             //   ),
                             // ),
                             const SizedBox(height: 5),
-
                           ],
                         ),
                       ),
@@ -151,8 +151,7 @@ class OrderDetailScreen extends StatelessWidget {
                 children: [
                   const Text(
                     'Thông tin liên hệ:',
-                    style:
-                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -168,8 +167,7 @@ class OrderDetailScreen extends StatelessWidget {
                     children: const [
                       Icon(Icons.email, color: Colors.blue),
                       SizedBox(width: 10),
-                      Text('hotro@example.com',
-                          style: TextStyle(fontSize: 16)),
+                      Text('hotro@example.com', style: TextStyle(fontSize: 16)),
                     ],
                   ),
                 ],
@@ -180,61 +178,47 @@ class OrderDetailScreen extends StatelessWidget {
       ),
       bottomNavigationBar: order.status == 'Đang chờ xử lý'
           ? Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: () {
-            _cancelOrder(context, order.id); // Gọi hàm hủy đơn hàng
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: const Text(
-            'Hủy đơn hàng',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ),
-      )
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  _cancelOrder(context, order.id); // Gọi hàm hủy đơn hàng
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  'Hủy đơn hàng',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            )
           : order.status == 'Đang giao hàng'
-          ? Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: () {
-            _confirmReceived(context, order.id); // Gọi hàm xác nhận đã nhận hàng
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: const Text(
-            'Đã nhận được hàng',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ),
-      ) : null,
+              ? Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _confirmReceived(
+                          context, order.id); // Gọi hàm xác nhận đã nhận hàng
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Đã nhận được hàng',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                )
+              : null,
     );
-  }
-
-  // Hàm chuyển trạng thái đơn hàng thành text mô tả
-  String getOrderStatusText(String status) {
-    switch (status) {
-      case 'Đã giao':
-        return 'Đơn hàng đã giao';
-      case 'Đang xử lý':
-        return 'Đơn hàng đang được xử lý';
-      case 'Đang giao':
-        return 'Đơn hàng đang được giao';
-      case 'Đã hủy':
-        return 'Đơn hàng đã bị hủy';
-      default:
-        return 'Trạng thái đơn hàng không xác định';
-    }
   }
 
   // Hàm hủy đơn hàng
@@ -255,9 +239,13 @@ class OrderDetailScreen extends StatelessWidget {
             onPressed: () async {
               // Thực hiện logic hủy đơn hàng ở đây
               // Gọi API hủy đơn hàng và hiển thị thông báo
-              String result = await orderService.updateOrderStatus("CANCELLED", orderId);
+              String result =
+                  await orderService.updateOrderStatus("CANCELLED", orderId);
               final userId = await SharedPreferencesHelper.getUserId();
-              Navigator.pushNamed(context, Routes.orderHistoryClient,arguments: userId,
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.orderHistoryClient,
+                arguments: userId,
               );
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Đơn hàng đã được hủy')),
@@ -269,6 +257,7 @@ class OrderDetailScreen extends StatelessWidget {
       ),
     );
   }
+
   void _confirmReceived(BuildContext context, int orderId) {
     final OrderService orderService = OrderService();
 
@@ -285,10 +274,11 @@ class OrderDetailScreen extends StatelessWidget {
           TextButton(
             onPressed: () async {
               // Gọi API cập nhật trạng thái thành "Đã giao"
-              String result = await orderService.updateOrderStatus("DELIVERED", orderId);
+              String result =
+                  await orderService.updateOrderStatus("DELIVERED", orderId);
 
               final userId = await SharedPreferencesHelper.getUserId();
-              Navigator.pushNamed(
+              Navigator.pushReplacementNamed(
                 context,
                 Routes.orderHistoryClient,
                 arguments: userId,
@@ -304,5 +294,4 @@ class OrderDetailScreen extends StatelessWidget {
       ),
     );
   }
-
 }

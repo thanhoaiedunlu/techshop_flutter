@@ -58,7 +58,10 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         break;
       case 1:
         final userId = await SharedPreferencesHelper.getUserId();
-        Navigator.pushNamed(context, Routes.orderHistoryClient,arguments: userId,
+        Navigator.pushNamed(
+          context,
+          Routes.orderHistoryClient,
+          arguments: userId,
         );
         break;
       case 2:
